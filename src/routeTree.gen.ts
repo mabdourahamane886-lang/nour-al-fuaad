@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SpirituelRouteImport } from './routes/spirituel'
+import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as CoursRouteImport } from './routes/cours'
+import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SpirituelRoute = SpirituelRouteImport.update({
+  id: '/spirituel',
+  path: '/spirituel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscriptionRoute = InscriptionRouteImport.update({
+  id: '/inscription',
+  path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursRoute = CoursRouteImport.update({
+  id: '/cours',
+  path: '/cours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArabeRoute = ArabeRouteImport.update({
+  id: '/arabe',
+  path: '/arabe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/arabe': typeof ArabeRoute
+  '/cours': typeof CoursRoute
+  '/inscription': typeof InscriptionRoute
+  '/spirituel': typeof SpirituelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arabe': typeof ArabeRoute
+  '/cours': typeof CoursRoute
+  '/inscription': typeof InscriptionRoute
+  '/spirituel': typeof SpirituelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/arabe': typeof ArabeRoute
+  '/cours': typeof CoursRoute
+  '/inscription': typeof InscriptionRoute
+  '/spirituel': typeof SpirituelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
+  id: '__root__' | '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArabeRoute: typeof ArabeRoute
+  CoursRoute: typeof CoursRoute
+  InscriptionRoute: typeof InscriptionRoute
+  SpirituelRoute: typeof SpirituelRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/spirituel': {
+      id: '/spirituel'
+      path: '/spirituel'
+      fullPath: '/spirituel'
+      preLoaderRoute: typeof SpirituelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cours': {
+      id: '/cours'
+      path: '/cours'
+      fullPath: '/cours'
+      preLoaderRoute: typeof CoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arabe': {
+      id: '/arabe'
+      path: '/arabe'
+      fullPath: '/arabe'
+      preLoaderRoute: typeof ArabeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArabeRoute: ArabeRoute,
+  CoursRoute: CoursRoute,
+  InscriptionRoute: InscriptionRoute,
+  SpirituelRoute: SpirituelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
