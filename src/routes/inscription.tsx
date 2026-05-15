@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { InscriptionForm } from "@/components/InscriptionForm";
 
 export const Route = createFileRoute("/inscription")({
   head: () => ({
@@ -21,6 +22,12 @@ const methods = [
   { name: "Wave", desc: "Transfert sécurisé" },
 ];
 
+const schedule = [
+  { day: "Lundi", ar: "الإِثْنَيْن" },
+  { day: "Mercredi", ar: "الأَرْبِعَاء" },
+  { day: "Vendredi", ar: "الجُمُعَة" },
+];
+
 function InscriptionPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-20">
@@ -31,6 +38,40 @@ function InscriptionPage() {
           Choisissez votre programme, effectuez le paiement, puis envoyez-nous le justificatif par WhatsApp.
         </p>
       </header>
+
+      {/* Form + Schedule */}
+      <section className="grid lg:grid-cols-2 gap-8 mb-20">
+        <InscriptionForm />
+        <div className="p-8 md:p-10 rounded-2xl text-primary-foreground" style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-3 opacity-80" style={{ color: "var(--gold)" }}>Calendrier des cours</p>
+          <h2 className="text-3xl md:text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>Trois séances par semaine</h2>
+          <p className="font-arabic text-2xl opacity-90 mb-8">ثَلَاثُ حِصَصٍ أُسْبُوعِيًّا</p>
+
+          <ul className="space-y-3 mb-8">
+            {schedule.map((s) => (
+              <li
+                key={s.day}
+                className="flex items-center justify-between px-5 py-4 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-semibold" style={{ background: "var(--gradient-gold)" }}>
+                    {s.day[0]}
+                  </div>
+                  <div>
+                    <p className="font-medium">{s.day}</p>
+                    <p className="text-xs opacity-70 font-arabic">{s.ar}</p>
+                  </div>
+                </div>
+                <span className="text-2xl tabular-nums" style={{ fontFamily: "var(--font-display)" }}>15:30</span>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-sm opacity-80 italic" style={{ fontFamily: "var(--font-display)" }}>
+            Cours en direct, tous les lundis, mercredis et vendredis à 15h30.
+          </p>
+        </div>
+      </section>
 
       {/* Tarifs */}
       <section className="grid md:grid-cols-2 gap-6 mb-16">
