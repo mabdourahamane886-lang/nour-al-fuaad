@@ -77,9 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Apprendre le Coran, la langue arabe, le tafsir, le fiqh et les hadiths avec accompagnement personnalisé." },
       { name: "author", content: "NOUROUL FOUA'AD" },
       { property: "og:title", content: "NOUROUL FOUA'AD — Cours islamiques en ligne" },
-      { property: "og:description", content: "Mémorisation du Coran, hadiths, fiqh et langue arabe. Accompagnement avec succès." },
+      { property: "og:description", content: "Apprendre le Coran, la langue arabe, le tafsir, le fiqh et les hadiths avec accompagnement personnalisé." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "NOUROUL FOUA'AD — Cours islamiques en ligne" },
+      { name: "twitter:description", content: "Apprendre le Coran, la langue arabe, le tafsir, le fiqh et les hadiths avec accompagnement personnalisé." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b3cfef06-bc95-4906-998f-2801d04c2342/id-preview-3435fef3--2caeb414-1961-4257-827e-68a94e4dae64.lovable.app-1778839209083.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b3cfef06-bc95-4906-998f-2801d04c2342/id-preview-3435fef3--2caeb414-1961-4257-827e-68a94e4dae64.lovable.app-1778839209083.png" },
     ],
     links: [
       {
