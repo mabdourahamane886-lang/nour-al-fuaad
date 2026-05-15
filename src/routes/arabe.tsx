@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PriceCard } from "./cours";
+import { PriceCard } from "@/components/PriceCard";
 
 export const Route = createFileRoute("/arabe")({
   head: () => ({
