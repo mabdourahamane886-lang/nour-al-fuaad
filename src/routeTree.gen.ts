@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpirituelRouteImport } from './routes/spirituel'
+import { Route as PaiementRouteImport } from './routes/paiement'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SpirituelRoute = SpirituelRouteImport.update({
   id: '/spirituel',
   path: '/spirituel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaiementRoute = PaiementRouteImport.update({
+  id: '/paiement',
+  path: '/paiement',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InscriptionRoute = InscriptionRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,28 @@ export interface FileRoutesById {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
+  fullPaths:
+    | '/'
+    | '/arabe'
+    | '/cours'
+    | '/inscription'
+    | '/paiement'
+    | '/spirituel'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
-  id: '__root__' | '/' | '/arabe' | '/cours' | '/inscription' | '/spirituel'
+  to: '/' | '/arabe' | '/cours' | '/inscription' | '/paiement' | '/spirituel'
+  id:
+    | '__root__'
+    | '/'
+    | '/arabe'
+    | '/cours'
+    | '/inscription'
+    | '/paiement'
+    | '/spirituel'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +98,7 @@ export interface RootRouteChildren {
   ArabeRoute: typeof ArabeRoute
   CoursRoute: typeof CoursRoute
   InscriptionRoute: typeof InscriptionRoute
+  PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
 }
 
@@ -86,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/spirituel'
       fullPath: '/spirituel'
       preLoaderRoute: typeof SpirituelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paiement': {
+      id: '/paiement'
+      path: '/paiement'
+      fullPath: '/paiement'
+      preLoaderRoute: typeof PaiementRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription': {
@@ -124,6 +154,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArabeRoute: ArabeRoute,
   CoursRoute: CoursRoute,
   InscriptionRoute: InscriptionRoute,
+  PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
 }
 export const routeTree = rootRouteImport
