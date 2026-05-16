@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { IPayForm } from "@/components/IPayForm";
 
 export const Route = createFileRoute("/paiement")({
   head: () => ({
@@ -62,6 +63,8 @@ function PaiementPage() {
             </div>
           ))}
         </div>
+
+        <IPayForm />
 
         <div className="bg-slate-900/60 border border-slate-700 rounded-3xl p-8 mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
