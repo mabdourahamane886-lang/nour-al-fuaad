@@ -67,7 +67,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
       if (!res.ok || body.status === "failed") {
         await supabaseAdmin
           .from("payments")
-          .update({ status: "failed", raw: body as object })
+          .update({ status: "failed", raw: body as never })
           .eq("transaction_id", data.transaction_id);
         return {
           ok: false as const,
@@ -80,7 +80,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
         .update({
           reference: body.reference ?? null,
           status: body.status ?? "pending",
-          raw: body as object,
+          raw: body as never,
         })
         .eq("transaction_id", data.transaction_id);
 
@@ -94,7 +94,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
       console.error("iPay request failed", error);
       await supabaseAdmin
         .from("payments")
-        .update({ status: "failed", raw: { error: String(error) } })
+        .update({ status: "failed", raw: { error: String(error) } as never })
         .eq("transaction_id", data.transaction_id);
       return {
         ok: false as const,
