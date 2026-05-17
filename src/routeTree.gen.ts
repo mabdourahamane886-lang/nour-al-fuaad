@@ -11,10 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
+import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
+import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
 
 const SpirituelRoute = SpirituelRouteImport.update({
   id: '/spirituel',
@@ -24,6 +28,11 @@ const SpirituelRoute = SpirituelRouteImport.update({
 const PaiementRoute = PaiementRouteImport.update({
   id: '/paiement',
   path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InscriptionRoute = InscriptionRouteImport.update({
@@ -46,22 +55,45 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecuReferenceRoute = RecuReferenceRouteImport.update({
+  id: '/recu/$reference',
+  path: '/recu/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
+  id: '/admin/paiements',
+  path: '/admin/paiements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
+  id: '/api/public/ipay-webhook',
+  path: '/api/public/ipay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/recu/$reference': typeof RecuReferenceRoute
+  '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/recu/$reference': typeof RecuReferenceRoute
+  '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +101,12 @@ export interface FileRoutesById {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/recu/$reference': typeof RecuReferenceRoute
+  '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,18 +115,36 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/login'
     | '/paiement'
     | '/spirituel'
+    | '/admin/paiements'
+    | '/recu/$reference'
+    | '/api/public/ipay-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/arabe' | '/cours' | '/inscription' | '/paiement' | '/spirituel'
+  to:
+    | '/'
+    | '/arabe'
+    | '/cours'
+    | '/inscription'
+    | '/login'
+    | '/paiement'
+    | '/spirituel'
+    | '/admin/paiements'
+    | '/recu/$reference'
+    | '/api/public/ipay-webhook'
   id:
     | '__root__'
     | '/'
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/login'
     | '/paiement'
     | '/spirituel'
+    | '/admin/paiements'
+    | '/recu/$reference'
+    | '/api/public/ipay-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -98,8 +152,12 @@ export interface RootRouteChildren {
   ArabeRoute: typeof ArabeRoute
   CoursRoute: typeof CoursRoute
   InscriptionRoute: typeof InscriptionRoute
+  LoginRoute: typeof LoginRoute
   PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
+  AdminPaiementsRoute: typeof AdminPaiementsRoute
+  RecuReferenceRoute: typeof RecuReferenceRoute
+  ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/paiement'
       fullPath: '/paiement'
       preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription': {
@@ -146,6 +211,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/recu/$reference': {
+      id: '/recu/$reference'
+      path: '/recu/$reference'
+      fullPath: '/recu/$reference'
+      preLoaderRoute: typeof RecuReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/paiements': {
+      id: '/admin/paiements'
+      path: '/admin/paiements'
+      fullPath: '/admin/paiements'
+      preLoaderRoute: typeof AdminPaiementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ipay-webhook': {
+      id: '/api/public/ipay-webhook'
+      path: '/api/public/ipay-webhook'
+      fullPath: '/api/public/ipay-webhook'
+      preLoaderRoute: typeof ApiPublicIpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -154,8 +240,12 @@ const rootRouteChildren: RootRouteChildren = {
   ArabeRoute: ArabeRoute,
   CoursRoute: CoursRoute,
   InscriptionRoute: InscriptionRoute,
+  LoginRoute: LoginRoute,
   PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
+  AdminPaiementsRoute: AdminPaiementsRoute,
+  RecuReferenceRoute: RecuReferenceRoute,
+  ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

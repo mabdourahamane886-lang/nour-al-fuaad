@@ -1,11 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const schema = z.object({
   customer_name: z.string().trim().min(2).max(80),
   amount: z.number().int().min(100).max(10_000_000),
   msisdn: z.string().trim().regex(/^\d{8,15}$/, "Numéro invalide (chiffres uniquement, indicatif sans +)"),
   transaction_id: z.string().trim().min(4).max(64),
+  programme: z.string().trim().max(80).optional(),
 });
 
 export const createIPayMobilePayment = createServerFn({ method: "POST" })
@@ -20,6 +22,21 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
         message:
           "Le paiement en ligne n'est pas encore activé. L'administrateur doit configurer la clé IPAY_PRIVATE_KEY.",
       };
+    }
+
+    // 1) Historise la transaction en "pending" AVANT l'appel iPay.
+    const { error: insertError } = await supabaseAdmin.from("payments").insert({
+      transaction_id: data.transaction_id,
+      customer_name: data.customer_name,
+      msisdn: data.msisdn,
+      amount: data.amount,
+      programme: data.programme ?? null,
+      status: "pending",
+      environment: env === "live" ? "live" : "sandbox",
+    });
+    if (insertError) {
+      console.error("payments insert failed", insertError);
+      return { ok: false as const, message: "Impossible d'enregistrer la transaction." };
     }
 
     try {
@@ -48,19 +65,37 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
       };
 
       if (!res.ok || body.status === "failed") {
+        await supabaseAdmin
+          .from("payments")
+          .update({ status: "failed", raw: body as never })
+          .eq("transaction_id", data.transaction_id);
         return {
           ok: false as const,
           message: body.message ?? `Erreur iPay (${res.status})`,
         };
       }
 
+      await supabaseAdmin
+        .from("payments")
+        .update({
+          reference: body.reference ?? null,
+          status: body.status ?? "pending",
+          raw: body as never,
+        })
+        .eq("transaction_id", data.transaction_id);
+
       return {
         ok: true as const,
         status: body.status ?? "pending",
         reference: body.reference ?? "",
+        transaction_id: data.transaction_id,
       };
     } catch (error) {
       console.error("iPay request failed", error);
+      await supabaseAdmin
+        .from("payments")
+        .update({ status: "failed", raw: { error: String(error) } as never })
+        .eq("transaction_id", data.transaction_id);
       return {
         ok: false as const,
         message: "Service iPay momentanément indisponible. Réessayez.",
