@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
@@ -25,6 +26,11 @@ const SpirituelRoute = SpirituelRouteImport.update({
 const PaiementRoute = PaiementRouteImport.update({
   id: '/paiement',
   path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InscriptionRoute = InscriptionRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/login'
     | '/paiement'
     | '/spirituel'
     | '/api/public/ipay-webhook'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/login'
     | '/paiement'
     | '/spirituel'
     | '/api/public/ipay-webhook'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/login'
     | '/paiement'
     | '/spirituel'
     | '/api/public/ipay-webhook'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   ArabeRoute: typeof ArabeRoute
   CoursRoute: typeof CoursRoute
   InscriptionRoute: typeof InscriptionRoute
+  LoginRoute: typeof LoginRoute
   PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/paiement'
       fullPath: '/paiement'
       preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription': {
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArabeRoute: ArabeRoute,
   CoursRoute: CoursRoute,
   InscriptionRoute: InscriptionRoute,
+  LoginRoute: LoginRoute,
   PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
@@ -187,3 +208,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
