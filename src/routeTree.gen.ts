@@ -16,6 +16,7 @@ import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
 
 const SpirituelRoute = SpirituelRouteImport.update({
@@ -53,6 +54,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
+  id: '/admin/paiements',
+  path: '/admin/paiements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
   id: '/api/public/ipay-webhook',
   path: '/api/public/ipay-webhook',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesById {
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/paiement'
     | '/spirituel'
+    | '/admin/paiements'
     | '/api/public/ipay-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/paiement'
     | '/spirituel'
+    | '/admin/paiements'
     | '/api/public/ipay-webhook'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/paiement'
     | '/spirituel'
+    | '/admin/paiements'
     | '/api/public/ipay-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
+  AdminPaiementsRoute: typeof AdminPaiementsRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
 }
 
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/paiements': {
+      id: '/admin/paiements'
+      path: '/admin/paiements'
+      fullPath: '/admin/paiements'
+      preLoaderRoute: typeof AdminPaiementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ipay-webhook': {
       id: '/api/public/ipay-webhook'
       path: '/api/public/ipay-webhook'
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
+  AdminPaiementsRoute: AdminPaiementsRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
