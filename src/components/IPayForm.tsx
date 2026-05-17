@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { createIPayMobilePayment, getIPayStatus } from "@/lib/ipay.functions";
+import { Link } from "@tanstack/react-router";
+import { createIPayMobilePayment } from "@/lib/ipay.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 const presets = [
   { label: "Inscription Sciences", value: 3000 },
@@ -12,17 +14,41 @@ const presets = [
 
 export function IPayForm() {
   const pay = useServerFn(createIPayMobilePayment);
-  const check = useServerFn(getIPayStatus);
 
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
   const [amount, setAmount] = useState(3000);
+  const [programme, setProgramme] = useState(presets[0].label);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<
     | null
     | { kind: "error"; message: string }
-    | { kind: "success"; status: string; reference: string }
+    | { kind: "success"; status: string; reference: string; transaction_id: string }
   >(null);
+
+  // Realtime: dès que le webhook iPay met à jour la ligne, on rafraîchit le statut.
+  useEffect(() => {
+    if (result?.kind !== "success") return;
+    const txId = result.transaction_id;
+    const ch = supabase
+      .channel(`pay-${txId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "payments", filter: `transaction_id=eq.${txId}` },
+        (payload) => {
+          const row = payload.new as { status?: string; reference?: string | null };
+          setResult((prev) =>
+            prev?.kind === "success"
+              ? { ...prev, status: row.status ?? prev.status, reference: row.reference ?? prev.reference }
+              : prev,
+          );
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [result]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,24 +62,21 @@ export function IPayForm() {
           msisdn: msisdn.replace(/\D/g, ""),
           amount: Number(amount),
           transaction_id,
+          programme,
         },
       });
       if (!res.ok) setResult({ kind: "error", message: res.message });
-      else setResult({ kind: "success", status: res.status, reference: res.reference });
+      else
+        setResult({
+          kind: "success",
+          status: res.status,
+          reference: res.reference,
+          transaction_id: res.transaction_id,
+        });
     } catch (err) {
       setResult({ kind: "error", message: (err as Error).message });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const refresh = async () => {
-    if (result?.kind !== "success") return;
-    const r = await check({ data: { reference: result.reference } });
-    if (r.ok && r.status) {
-      setResult({ kind: "success", status: r.status, reference: result.reference });
-    } else if (!r.ok) {
-      setResult({ kind: "error", message: r.message });
     }
   };
 
@@ -67,7 +90,7 @@ export function IPayForm() {
       </div>
       <p className="text-slate-400 mb-6">
         Mobile Money : MyNita, Amana ta, Wave, Orange Money. Vous recevrez une notification
-        sur votre téléphone pour confirmer le paiement.
+        sur votre téléphone pour confirmer le paiement — le statut se met à jour automatiquement.
       </p>
 
       <form onSubmit={onSubmit} className="grid md:grid-cols-2 gap-5">
@@ -101,7 +124,10 @@ export function IPayForm() {
               <button
                 type="button"
                 key={p.label}
-                onClick={() => setAmount(p.value)}
+                onClick={() => {
+                  setAmount(p.value);
+                  setProgramme(p.label);
+                }}
                 className={`px-3 py-2 text-sm rounded-full border transition ${
                   amount === p.value
                     ? "bg-cyan-500 border-cyan-500 text-slate-950 font-semibold"
@@ -140,15 +166,14 @@ export function IPayForm() {
         <div className="mt-5 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-sm space-y-2">
           <div>
             Statut : <span className="font-semibold">{result.status}</span>
+            {result.status === "pending" && <span className="ml-2 text-xs opacity-70">(mise à jour automatique…)</span>}
           </div>
-          <div className="text-xs opacity-80">Référence : {result.reference}</div>
-          <button
-            type="button"
-            onClick={refresh}
-            className="text-xs underline opacity-90 hover:opacity-100"
-          >
-            Actualiser le statut
-          </button>
+          <div className="text-xs opacity-80">Référence : {result.reference || "—"}</div>
+          {result.reference && (
+            <Link to="/recu/$reference" params={{ reference: result.reference }} className="inline-block mt-2 text-xs underline">
+              Voir / imprimer le reçu
+            </Link>
+          )}
         </div>
       )}
     </div>
