@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    name: Build (Tailwind v4 + Lightning CSS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Lint
+        run: bun run lint
+      - name: Production build (fails on Tailwind/Lightning CSS errors)
+        run: bun run build
+      - name: Verify CSS compiled and is non-empty
+        run: |
+          set -e
+          CSS=$(find dist .output -type f -name "*.css" 2>/dev/null | head -n 1)
+          if [ -z "$CSS" ]; then
+            echo "::error::No compiled CSS found — Tailwind/Lightning CSS likely failed."
+            exit 1
+          fi
+          SIZE=$(wc -c < "$CSS")
+          echo "Found $CSS ($SIZE bytes)"
+          if [ "$SIZE" -lt 1000 ]; then
+            echo "::error::Compiled CSS too small ($SIZE bytes)."
+            exit 1
+          fi
