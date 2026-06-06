@@ -21,9 +21,9 @@ const methods = [
 ];
 
 const plans = [
-  { name: "Inscription", price: "1 500 – 3 000 FCFA", features: ["Accès à un programme", "Suivi personnalisé", "Support WhatsApp"] },
-  { name: "Mensualité Sciences", price: "5 000 FCFA", features: ["Coran, Hadith, Fiqh", "3 séances / semaine", "Accompagnement"] },
-  { name: "Langue Arabe", price: "3 000 – 4 000 FCFA", features: ["Débutant ou avancé", "Cours en direct", "Exercices guidés"] },
+  { name: "Inscription", price: "1 000 – 2 500 FCFA", features: ["Accès à un programme", "Suivi personnalisé", "Support WhatsApp"] },
+  { name: "Mensualité Sciences", price: "4 000 FCFA", features: ["Coran, Hadith, Fiqh", "3 séances / semaine", "Accompagnement"] },
+  { name: "Langue Arabe", price: "2 500 – 3 000 FCFA", features: ["Débutant ou avancé", "Cours en direct", "Exercices guidés"] },
 ];
 
 function PaiementPage() {

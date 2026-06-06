@@ -12,8 +12,8 @@ export const Route = createFileRoute("/inscription")({
 });
 
 const tarifs = [
-  { cat: "Sciences islamiques", items: [["Inscription", "3 000"], ["Mensualité", "5 000"]] },
-  { cat: "Langue arabe", items: [["Inscription", "1 500"], ["Niveau débutant", "3 000"], ["Apprentissage", "4 000"]] },
+  { cat: "Sciences islamiques", items: [["Inscription", "2 500"], ["Mensualité", "4 000"]] },
+  { cat: "Langue arabe", items: [["Inscription", "1 000"], ["Niveau débutant", "2 500"], ["Apprentissage", "3 000"]] },
 ] as const;
 
 const methods = [

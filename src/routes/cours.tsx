@@ -5,7 +5,7 @@ export const Route = createFileRoute("/cours")({
   head: () => ({
     meta: [
       { title: "Cours & Tarifs — NOUROUL FOUA'AD" },
-      { name: "description", content: "Mémorisation du Coran, hadiths et fiqh. Tarifs : inscription 3000F, mois 5000F. Accompagnement avec succès." },
+      { name: "description", content: "Mémorisation du Coran, hadiths et fiqh. Tarifs : inscription 2500F, mois 4000F. Accompagnement avec succès." },
     ],
   }),
   component: CoursPage,
@@ -60,8 +60,8 @@ function CoursPage() {
           <h2 className="text-4xl text-primary">Sciences islamiques</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          <PriceCard label="Inscription" price="3 000" highlight />
-          <PriceCard label="Mensualité" price="5 000" />
+          <PriceCard label="Inscription" price="2 500" highlight />
+          <PriceCard label="Mensualité" price="4 000" />
         </div>
         <p className="text-center text-muted-foreground mt-8 italic" style={{ fontFamily: "var(--font-display)" }}>
           Accompagnement avec succès — un suivi jusqu'à la maîtrise.
