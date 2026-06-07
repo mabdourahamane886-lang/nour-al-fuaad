@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { createIPayMobilePayment } from "@/lib/ipay.functions";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,6 +14,7 @@ const presets = [
 
 export function IPayForm() {
   const pay = useServerFn(createIPayMobilePayment);
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
@@ -66,13 +67,16 @@ export function IPayForm() {
         },
       });
       if (!res.ok) setResult({ kind: "error", message: res.message });
-      else
+      else {
         setResult({
           kind: "success",
           status: res.status,
           reference: res.reference,
           transaction_id: res.transaction_id,
         });
+        // Redirection vers la page de statut dédiée (mise à jour automatique).
+        navigate({ to: "/statut/$transactionId", params: { transactionId: res.transaction_id } });
+      }
     } catch (err) {
       setResult({ kind: "error", message: (err as Error).message });
     } finally {
