@@ -66,6 +66,25 @@ function PaiementPage() {
 
         <IPayForm />
 
+        <div className="bg-gradient-to-r from-emerald-600 to-cyan-600 rounded-3xl p-8 mb-12 text-center shadow-2xl">
+          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white/20 border border-white/30 mb-3">
+            Paiement instantané
+          </div>
+          <h2 className="text-3xl font-bold mb-3">Payer directement via iPay Money</h2>
+          <p className="text-slate-100 mb-6 max-w-2xl mx-auto">
+            Accédez à notre guichet iPay officiel pour régler vos frais en quelques secondes
+            (Mobile Money, carte bancaire). Confirmation immédiate.
+          </p>
+          <a
+            href="https://i-pay.money/merchant_payment_desks/684229018389"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-emerald-700 font-semibold hover:scale-105 transition-transform"
+          >
+            Ouvrir le guichet iPay Money →
+          </a>
+        </div>
+
         <div className="bg-slate-900/60 border border-slate-700 rounded-3xl p-8 mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
