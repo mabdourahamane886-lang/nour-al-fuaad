@@ -16,6 +16,7 @@ import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
 import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
@@ -55,6 +56,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatutTransactionIdRoute = StatutTransactionIdRouteImport.update({
+  id: '/statut/$transactionId',
+  path: '/statut/$transactionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuReferenceRoute = RecuReferenceRouteImport.update({
   id: '/recu/$reference',
   path: '/recu/$reference',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/spirituel': typeof SpirituelRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
+  '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/spirituel': typeof SpirituelRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
+  '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/spirituel': typeof SpirituelRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
+  '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/admin/paiements'
     | '/recu/$reference'
+    | '/statut/$transactionId'
     | '/api/public/ipay-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/admin/paiements'
     | '/recu/$reference'
+    | '/statut/$transactionId'
     | '/api/public/ipay-webhook'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/admin/paiements'
     | '/recu/$reference'
+    | '/statut/$transactionId'
     | '/api/public/ipay-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   SpirituelRoute: typeof SpirituelRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
   RecuReferenceRoute: typeof RecuReferenceRoute
+  StatutTransactionIdRoute: typeof StatutTransactionIdRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
 }
 
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/statut/$transactionId': {
+      id: '/statut/$transactionId'
+      path: '/statut/$transactionId'
+      fullPath: '/statut/$transactionId'
+      preLoaderRoute: typeof StatutTransactionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recu/$reference': {
       id: '/recu/$reference'
       path: '/recu/$reference'
@@ -245,8 +265,19 @@ const rootRouteChildren: RootRouteChildren = {
   SpirituelRoute: SpirituelRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
   RecuReferenceRoute: RecuReferenceRoute,
+  StatutTransactionIdRoute: StatutTransactionIdRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
