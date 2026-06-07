@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { jsPDF } from "jspdf";
 
 export const Route = createFileRoute("/statut/$transactionId")({
   head: () => ({
@@ -119,6 +120,14 @@ function StatutPage() {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3 justify-center">
+          {payment.status === "success" && (
+            <button
+              onClick={() => downloadReceiptPdf(payment)}
+              className="px-5 py-3 rounded-xl bg-emerald-500 text-slate-950 font-semibold"
+            >
+              Télécharger le reçu PDF
+            </button>
+          )}
           {payment.reference && (
             <Link
               to="/recu/$reference"
@@ -145,6 +154,66 @@ function StatutPage() {
       </div>
     </div>
   );
+}
+
+function downloadReceiptPdf(p: Payment) {
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const w = doc.internal.pageSize.getWidth();
+  let y = 60;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("NOUROUL FOUA'AD", w / 2, y, { align: "center" });
+  y += 22;
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(110);
+  doc.text("Reçu de paiement officiel", w / 2, y, { align: "center" });
+  doc.setTextColor(0);
+
+  y += 30;
+  doc.setDrawColor(220);
+  doc.line(50, y, w - 50, y);
+  y += 30;
+
+  const rows: Array<[string, string]> = [
+    ["Client", p.customer_name],
+    ["Téléphone", p.msisdn],
+    ["Programme", p.programme ?? "—"],
+    ["Référence iPay", p.reference ?? "—"],
+    ["Transaction", p.transaction_id],
+    ["Statut", "PAYÉ ✓"],
+    ["Date d'initiation", new Date(p.created_at).toLocaleString("fr-FR")],
+    ["Date de paiement", p.paid_at ? new Date(p.paid_at).toLocaleString("fr-FR") : "—"],
+  ];
+  doc.setFontSize(11);
+  for (const [label, value] of rows) {
+    doc.setTextColor(120);
+    doc.text(label, 60, y);
+    doc.setTextColor(20);
+    doc.text(String(value), 220, y);
+    y += 22;
+  }
+
+  y += 18;
+  doc.setDrawColor(220);
+  doc.line(50, y, w - 50, y);
+  y += 30;
+  doc.setFontSize(13);
+  doc.setTextColor(110);
+  doc.text("Montant payé", 60, y);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0);
+  doc.text(`${p.amount.toLocaleString("fr-FR")} FCFA`, w - 60, y, { align: "right" });
+
+  y += 50;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(140);
+  doc.text("Paiement effectué via iPay Money — Contact : +227 88 37 61 33", w / 2, y, { align: "center" });
+
+  doc.save(`recu-${p.reference ?? p.transaction_id}.pdf`);
 }
 
 function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
