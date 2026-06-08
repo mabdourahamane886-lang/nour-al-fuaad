@@ -5,10 +5,18 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 const schema = z.object({
   customer_name: z.string().trim().min(2).max(80),
   amount: z.number().int().min(100).max(10_000_000),
-  msisdn: z.string().trim().regex(/^\d{8,15}$/, "Numéro invalide (chiffres uniquement, indicatif sans +)"),
+  msisdn: z.string().trim().regex(/^\d{8,15}$/, "Numéro invalide"),
   transaction_id: z.string().trim().min(4).max(64),
   programme: z.string().trim().max(80).optional(),
 });
+
+// iPay attend le numéro local Niger (8 chiffres), sans indicatif pays.
+function normalizeNigerMsisdn(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("227") && digits.length === 11) return digits.slice(3);
+  if (digits.startsWith("00227")) return digits.slice(5);
+  return digits;
+}
 
 export const createIPayMobilePayment = createServerFn({ method: "POST" })
   .inputValidator((input) => schema.parse(input))
@@ -25,10 +33,11 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
     }
 
     // 1) Historise la transaction en "pending" AVANT l'appel iPay.
+    const msisdn = normalizeNigerMsisdn(data.msisdn);
     const { error: insertError } = await supabaseAdmin.from("payments").insert({
       transaction_id: data.transaction_id,
       customer_name: data.customer_name,
-      msisdn: data.msisdn,
+      msisdn,
       amount: data.amount,
       programme: data.programme ?? null,
       status: "pending",
@@ -54,7 +63,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
           country: "NE",
           amount: String(data.amount),
           transaction_id: data.transaction_id,
-          msisdn: data.msisdn,
+          msisdn,
         }),
       });
 
