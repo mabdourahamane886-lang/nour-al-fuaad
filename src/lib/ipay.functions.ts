@@ -34,6 +34,12 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
 
     // 1) Historise la transaction en "pending" AVANT l'appel iPay.
     const msisdn = normalizeNigerMsisdn(data.msisdn);
+    if (msisdn.length !== 8) {
+      return {
+        ok: false as const,
+        message: "Numéro invalide : 8 chiffres locaux attendus (ex. 88376133).",
+      };
+    }
     const { error: insertError } = await supabaseAdmin.from("payments").insert({
       transaction_id: data.transaction_id,
       customer_name: data.customer_name,
