@@ -12,12 +12,22 @@ const presets = [
   { label: "Mensualité", value: 4000 },
 ];
 
+// Normalise un numéro Niger : retire +, espaces, indicatif 227 / 00227.
+// Renvoie 8 chiffres locaux (ou la saisie nettoyée si ce n'est pas un format Niger).
+function normalizeNigerMsisdn(raw: string): string {
+  let d = raw.replace(/\D/g, "");
+  if (d.startsWith("00227")) d = d.slice(5);
+  else if (d.startsWith("227") && d.length === 11) d = d.slice(3);
+  return d;
+}
+
 export function IPayForm() {
   const pay = useServerFn(createIPayMobilePayment);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
+  const [msisdnError, setMsisdnError] = useState<string | null>(null);
   const [amount, setAmount] = useState(2500);
   const [programme, setProgramme] = useState(presets[0].label);
   const [loading, setLoading] = useState(false);
@@ -53,6 +63,12 @@ export function IPayForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const localMsisdn = normalizeNigerMsisdn(msisdn);
+    if (localMsisdn.length !== 8) {
+      setMsisdnError("Numéro invalide : 8 chiffres attendus (ex. 88376133), avec ou sans 227.");
+      return;
+    }
+    setMsisdnError(null);
     setLoading(true);
     setResult(null);
     try {
@@ -60,7 +76,7 @@ export function IPayForm() {
       const res = await pay({
         data: {
           customer_name: name.trim(),
-          msisdn: msisdn.replace(/\D/g, ""),
+          msisdn: localMsisdn,
           amount: Number(amount),
           transaction_id,
           programme,
@@ -116,10 +132,25 @@ export function IPayForm() {
             type="tel"
             required
             value={msisdn}
-            onChange={(e) => setMsisdn(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-500 outline-none"
-            placeholder="227XXXXXXXX"
+            inputMode="numeric"
+            maxLength={15}
+            onChange={(e) => {
+              setMsisdn(e.target.value);
+              if (msisdnError) setMsisdnError(null);
+            }}
+            onBlur={(e) => {
+              const local = normalizeNigerMsisdn(e.target.value);
+              if (local) setMsisdn(local);
+            }}
+            className={`w-full px-4 py-3 rounded-xl bg-slate-950 border outline-none ${
+              msisdnError ? "border-red-500" : "border-slate-700 focus:border-cyan-500"
+            }`}
+            placeholder="88376133 (ou 22788376133)"
+            aria-invalid={msisdnError ? true : undefined}
           />
+          <p className={`mt-1 text-xs ${msisdnError ? "text-red-400" : "text-slate-500"}`}>
+            {msisdnError ?? "8 chiffres locaux. L'indicatif 227 est retiré automatiquement."}
+          </p>
         </div>
         <div className="md:col-span-2">
           <label className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Programme</label>
