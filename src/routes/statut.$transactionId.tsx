@@ -104,6 +104,23 @@ function StatutPage() {
               Mise à jour automatique en cours…
             </div>
           )}
+          <div className="mt-6 inline-flex flex-col items-center gap-2 px-5 py-4 rounded-2xl bg-black/30 border border-white/10">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-slate-300">
+              Référence de transaction
+            </div>
+            <div className="font-mono text-lg text-white break-all">
+              {payment.reference ?? payment.transaction_id}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard?.writeText(payment.reference ?? payment.transaction_id);
+              }}
+              className="text-xs underline text-slate-300 hover:text-white"
+            >
+              Copier la référence
+            </button>
+          </div>
         </div>
 
         <div className="bg-slate-900/60 border border-slate-700 rounded-3xl p-8 mt-6 space-y-4">
