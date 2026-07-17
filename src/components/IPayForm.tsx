@@ -101,33 +101,33 @@ export function IPayForm() {
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-700 rounded-3xl p-8 mb-12">
+    <div className="bg-white border border-emerald-200 rounded-3xl p-8 mb-12 shadow-xl text-emerald-950">
       <div className="flex items-center gap-3 mb-2">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700 border border-emerald-300">
           Nouveau
         </span>
-        <h2 className="text-3xl font-bold">Payer en ligne via iPay Money</h2>
+        <h2 className="text-3xl font-bold text-emerald-900">Payer en ligne via iPay Money</h2>
       </div>
-      <p className="text-slate-400 mb-6">
-        Mobile Money : MyNita, Amana ta, Wave, Orange Money. Vous recevrez une notification
+      <p className="text-emerald-900/70 mb-6">
+        Mobile Money : MyNita, Amana ta, Wave, Orange Money, Moov Money. Vous recevrez une notification
         sur votre téléphone pour confirmer le paiement — le statut se met à jour automatiquement.
       </p>
 
       <form onSubmit={onSubmit} className="grid md:grid-cols-2 gap-5">
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Nom complet</label>
+          <label className="block text-xs uppercase tracking-[0.2em] text-emerald-700 mb-2">Nom complet</label>
           <input
             type="text"
             required
             maxLength={80}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-emerald-200 focus:border-emerald-500 outline-none text-emerald-950"
             placeholder="Votre nom"
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Numéro Mobile Money</label>
+          <label className="block text-xs uppercase tracking-[0.2em] text-emerald-700 mb-2">Numéro Mobile Money</label>
           <input
             type="tel"
             required
@@ -142,18 +142,18 @@ export function IPayForm() {
               const local = normalizeNigerMsisdn(e.target.value);
               if (local) setMsisdn(local);
             }}
-            className={`w-full px-4 py-3 rounded-xl bg-slate-950 border outline-none ${
-              msisdnError ? "border-red-500" : "border-slate-700 focus:border-cyan-500"
+            className={`w-full px-4 py-3 rounded-xl bg-white text-emerald-950 border outline-none ${
+              msisdnError ? "border-red-500" : "border-emerald-200 focus:border-emerald-500"
             }`}
             placeholder="88376133 (ou 22788376133)"
             aria-invalid={msisdnError ? true : undefined}
           />
-          <p className={`mt-1 text-xs ${msisdnError ? "text-red-400" : "text-slate-500"}`}>
+          <p className={`mt-1 text-xs ${msisdnError ? "text-red-500" : "text-emerald-900/60"}`}>
             {msisdnError ?? "8 chiffres locaux. L'indicatif 227 est retiré automatiquement."}
           </p>
         </div>
         <div className="md:col-span-2">
-          <label className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Programme</label>
+          <label className="block text-xs uppercase tracking-[0.2em] text-emerald-700 mb-2">Programme</label>
           <div className="flex flex-wrap gap-2 mb-3">
             {presets.map((p) => (
               <button
@@ -165,8 +165,8 @@ export function IPayForm() {
                 }}
                 className={`px-3 py-2 text-sm rounded-full border transition ${
                   amount === p.value
-                    ? "bg-cyan-500 border-cyan-500 text-slate-950 font-semibold"
-                    : "border-slate-700 text-slate-300 hover:border-cyan-500/50"
+                    ? "bg-emerald-500 border-emerald-500 text-white font-semibold"
+                    : "border-emerald-200 text-emerald-800 hover:border-emerald-400"
                 }`}
               >
                 {p.label} · {p.value.toLocaleString("fr-FR")} F
@@ -179,26 +179,26 @@ export function IPayForm() {
             step={100}
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-white text-emerald-950 border border-emerald-200 focus:border-emerald-500 outline-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="md:col-span-2 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold disabled:opacity-60 hover:opacity-90 transition"
+          className="md:col-span-2 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-700 text-white font-semibold disabled:opacity-60 hover:opacity-90 transition"
         >
           {loading ? "Envoi en cours…" : `Payer ${amount.toLocaleString("fr-FR")} FCFA`}
         </button>
       </form>
 
       {result?.kind === "error" && (
-        <div className="mt-5 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
+        <div className="mt-5 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
           {result.message}
         </div>
       )}
       {result?.kind === "success" && (
-        <div className="mt-5 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-sm space-y-2">
+        <div className="mt-5 p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-sm space-y-2">
           <div>
             Statut : <span className="font-semibold">{result.status}</span>
             {result.status === "pending" && <span className="ml-2 text-xs opacity-70">(mise à jour automatique…)</span>}
