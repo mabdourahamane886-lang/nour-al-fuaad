@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { explainIPayError } from "./ipay-errors";
 
 const schema = z.object({
   customer_name: z.string().trim().min(2).max(80),
