@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { explainIPayError } from "./ipay-errors";
 
 const schema = z.object({
   customer_name: z.string().trim().min(2).max(80),
@@ -86,7 +87,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
           .eq("transaction_id", data.transaction_id);
         return {
           ok: false as const,
-          message: body.message ?? `Erreur iPay (${res.status})`,
+          message: explainIPayError(res.status, body.message),
         };
       }
 
