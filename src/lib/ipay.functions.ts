@@ -86,7 +86,7 @@ export const createIPayMobilePayment = createServerFn({ method: "POST" })
           .eq("transaction_id", data.transaction_id);
         return {
           ok: false as const,
-          message: body.message ?? `Erreur iPay (${res.status})`,
+          message: explainIPayError(res.status, body.message),
         };
       }
 
