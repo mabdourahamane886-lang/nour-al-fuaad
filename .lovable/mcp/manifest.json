@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://dvjkvwfbsaokeoolgvfu.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "nouroul-fouaad-academy",
+      "version": "0.1.0",
+      "title": "Nouroul Fouaad Academy"
+    },
+    "tools": [
+      {
+        "name": "list_payments",
+        "title": "Lister les paiements",
+        "description": "Liste les transactions iPay de NOUROUL FOUA'AD (les plus récentes d'abord). Réservé aux administrateurs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "default": "all",
+              "description": "Filtrer par statut de paiement.",
+              "type": "string",
+              "enum": [
+                "all",
+                "pending",
+                "success",
+                "failed",
+                "cancelled"
+              ]
+            },
+            "limit": {
+              "default": 50,
+              "description": "Nombre maximum de lignes.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_payment",
+        "title": "Détail d'un paiement",
+        "description": "Récupère une transaction iPay par son identifiant de transaction ou sa référence. Réservé aux administrateurs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "transaction_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Identifiant de transaction (NF-...). Null si référence fournie."
+            },
+            "reference": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Référence iPay. Null si transaction_id fourni."
+            }
+          },
+          "required": [
+            "transaction_id",
+            "reference"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "payment_totals",
+        "title": "Totaux encaissés",
+        "description": "Calcule le total encaissé (paiements validés) sur les N derniers jours, en FCFA. Réservé aux administrateurs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "days": {
+              "default": 30,
+              "description": "Fenêtre en jours à partir d'aujourd'hui.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
