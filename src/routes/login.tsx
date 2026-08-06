@@ -4,11 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Connexion administrateur — NOUROUL FOUA'AD" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" ? s.next : undefined,
+  }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  // N'accepte qu'un chemin relatif same-origin.
+  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +31,13 @@ function LoginPage() {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: "/admin/paiements" });
+        if (safeNext) window.location.href = safeNext;
+        else navigate({ to: "/admin/paiements" });
       } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/admin/paiements" },
+          options: { emailRedirectTo: window.location.origin + (safeNext ?? "/admin/paiements") },
         });
         if (error) throw error;
         setInfo("Compte créé. Vérifiez votre email pour confirmer, puis demandez à devenir administrateur.");
