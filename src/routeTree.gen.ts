@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
@@ -19,7 +20,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
 import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const SpirituelRoute = SpirituelRouteImport.update({
   id: '/spirituel',
@@ -29,6 +33,11 @@ const SpirituelRoute = SpirituelRouteImport.update({
 const PaiementRoute = PaiementRouteImport.update({
   id: '/paiement',
   path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -71,11 +80,29 @@ const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
   path: '/admin/paiements',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
   id: '/api/public/ipay-webhook',
   path: '/api/public/ipay-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,11 +110,15 @@ export interface FileRoutesByFullPath {
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -96,11 +127,15 @@ export interface FileRoutesByTo {
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRoutesById {
@@ -110,11 +145,15 @@ export interface FileRoutesById {
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
 }
 export interface FileRouteTypes {
@@ -125,11 +164,15 @@ export interface FileRouteTypes {
     | '/cours'
     | '/inscription'
     | '/login'
+    | '/mcp'
     | '/paiement'
     | '/spirituel'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -138,11 +181,15 @@ export interface FileRouteTypes {
     | '/cours'
     | '/inscription'
     | '/login'
+    | '/mcp'
     | '/paiement'
     | '/spirituel'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
   id:
     | '__root__'
@@ -151,11 +198,15 @@ export interface FileRouteTypes {
     | '/cours'
     | '/inscription'
     | '/login'
+    | '/mcp'
     | '/paiement'
     | '/spirituel'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -165,11 +216,15 @@ export interface RootRouteChildren {
   CoursRoute: typeof CoursRoute
   InscriptionRoute: typeof InscriptionRoute
   LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
   PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
   RecuReferenceRoute: typeof RecuReferenceRoute
   StatutTransactionIdRoute: typeof StatutTransactionIdRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
 }
 
@@ -187,6 +242,13 @@ declare module '@tanstack/react-router' {
       path: '/paiement'
       fullPath: '/paiement'
       preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -245,11 +307,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPaiementsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ipay-webhook': {
       id: '/api/public/ipay-webhook'
       path: '/api/public/ipay-webhook'
       fullPath: '/api/public/ipay-webhook'
       preLoaderRoute: typeof ApiPublicIpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -261,11 +344,16 @@ const rootRouteChildren: RootRouteChildren = {
   CoursRoute: CoursRoute,
   InscriptionRoute: InscriptionRoute,
   LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
   PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
   RecuReferenceRoute: RecuReferenceRoute,
   StatutTransactionIdRoute: StatutTransactionIdRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
