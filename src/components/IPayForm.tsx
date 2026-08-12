@@ -21,16 +21,25 @@ function normalizeNigerMsisdn(raw: string): string {
   return d;
 }
 
-export function IPayForm() {
+export function IPayForm({
+  presetAmount,
+  presetProgramme,
+}: { presetAmount?: number; presetProgramme?: string } = {}) {
   const pay = useServerFn(createIPayMobilePayment);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
   const [msisdnError, setMsisdnError] = useState<string | null>(null);
-  const [amount, setAmount] = useState(2500);
-  const [programme, setProgramme] = useState(presets[0].label);
+  const [amount, setAmount] = useState(presetAmount ?? 2500);
+  const [programme, setProgramme] = useState(presetProgramme ?? presets[0].label);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (presetAmount) setAmount(presetAmount);
+    if (presetProgramme) setProgramme(presetProgramme);
+  }, [presetAmount, presetProgramme]);
+
   const [result, setResult] = useState<
     | null
     | { kind: "error"; message: string }
