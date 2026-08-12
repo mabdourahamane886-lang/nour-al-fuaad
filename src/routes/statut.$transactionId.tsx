@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { getPublicPayment } from "@/lib/payment-status.functions";
 import { jsPDF } from "jspdf";
 
 export const Route = createFileRoute("/statut/$transactionId")({
@@ -27,46 +28,31 @@ type Payment = {
 
 function StatutPage() {
   const { transactionId } = Route.useParams();
+  const fetchPayment = useServerFn(getPublicPayment);
   const [payment, setPayment] = useState<Payment | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
+    let current: Payment | null = null;
     const load = async () => {
-      const { data } = await supabase
-        .from("payments")
-        .select(
-          "reference, transaction_id, customer_name, msisdn, amount, programme, status, created_at, paid_at",
-        )
-        .eq("transaction_id", transactionId)
-        .maybeSingle();
+      const res = await fetchPayment({ data: { transaction_id: transactionId } }).catch(() => ({
+        payment: null,
+      }));
       if (mounted) {
-        setPayment(data as Payment | null);
+        current = res.payment as Payment | null;
+        setPayment(current);
         setLoading(false);
       }
     };
     load();
-    const ch = supabase
-      .channel(`statut-${transactionId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "payments",
-          filter: `transaction_id=eq.${transactionId}`,
-        },
-        () => load(),
-      )
-      .subscribe();
-    // Filet de sécurité : re-poll toutes les 5 s tant qu'on est en attente.
+    // Rafraîchissement toutes les 5 s tant que le paiement est en attente.
     const poll = setInterval(() => {
-      if (mounted && (!payment || payment.status === "pending")) load();
+      if (mounted && (!current || current.status === "pending")) load();
     }, 5000);
     return () => {
       mounted = false;
       clearInterval(poll);
-      supabase.removeChannel(ch);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionId]);

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { getPublicPayment } from "@/lib/payment-status.functions";
 
 export const Route = createFileRoute("/recu/$reference")({
   head: () => ({ meta: [{ title: "Reçu de paiement — NOUROUL FOUA'AD" }, { name: "robots", content: "noindex" }] }),
@@ -21,31 +22,24 @@ type Payment = {
 
 function ReceiptPage() {
   const { reference } = Route.useParams();
+  const fetchPayment = useServerFn(getPublicPayment);
   const [payment, setPayment] = useState<Payment | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
-      const { data } = await supabase
-        .from("payments")
-        .select("reference, transaction_id, customer_name, msisdn, amount, programme, status, created_at, paid_at")
-        .eq("reference", reference)
-        .maybeSingle();
+      const res = await fetchPayment({ data: { reference } }).catch(() => ({ payment: null }));
       if (mounted) {
-        setPayment(data as Payment | null);
+        setPayment(res.payment as Payment | null);
         setLoading(false);
       }
     };
     load();
-    const ch = supabase
-      .channel(`recu-${reference}`)
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "payments", filter: `reference=eq.${reference}` }, () => load())
-      .subscribe();
     return () => {
       mounted = false;
-      supabase.removeChannel(ch);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reference]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-500">Chargement…</div>;
