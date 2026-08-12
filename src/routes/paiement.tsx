@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
 
 export const Route = createFileRoute("/paiement")({
@@ -22,12 +23,40 @@ const methods = [
 ];
 
 const plans = [
-  { name: "Inscription", price: "1 000 – 2 500 FCFA", features: ["Accès à un programme", "Suivi personnalisé", "Support WhatsApp"] },
-  { name: "Mensualité Sciences", price: "4 000 FCFA", features: ["Coran, Hadith, Fiqh", "3 séances / semaine", "Accompagnement"] },
-  { name: "Langue Arabe", price: "2 500 – 3 000 FCFA", features: ["Débutant ou avancé", "Cours en direct", "Exercices guidés"] },
+  {
+    name: "Inscription Sciences",
+    amount: 2500,
+    programme: "Inscription Sciences",
+    features: ["Frais d'inscription unique", "Coran, Hadith, Fiqh", "Support WhatsApp"],
+  },
+  {
+    name: "Mensualité Sciences",
+    amount: 4000,
+    programme: "Mensualité",
+    features: ["Paiement mensuel", "3 séances / semaine", "Accompagnement"],
+  },
+  {
+    name: "Inscription Arabe",
+    amount: 1000,
+    programme: "Inscription Arabe",
+    features: ["Frais d'inscription unique", "Langue arabe", "Suivi personnalisé"],
+  },
+  {
+    name: "Langue Arabe — complet",
+    amount: 3000,
+    programme: "Arabe — complet",
+    features: ["Cours en direct", "Exercices guidés", "Niveau avancé"],
+  },
 ];
 
 function PaiementPage() {
+  const [selected, setSelected] = useState<{ amount: number; programme: string } | null>(null);
+
+  const choose = (amount: number, programme: string) => {
+    setSelected({ amount, programme });
+    document.getElementById("ipay")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 text-emerald-950 p-6">
       <div className="max-w-7xl mx-auto">
@@ -40,11 +69,18 @@ function PaiementPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {plans.map((plan, index) => (
-            <div key={index} className="bg-white border border-emerald-200 rounded-3xl p-8 shadow-xl hover:scale-105 transition-all duration-300">
+            <div
+              key={index}
+              className={`bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition-all duration-300 border ${
+                selected?.programme === plan.programme ? "border-emerald-500 ring-2 ring-emerald-300" : "border-emerald-200"
+              }`}
+            >
               <h2 className="text-2xl font-bold mb-2 text-emerald-900">{plan.name}</h2>
-              <div className="text-4xl font-bold text-emerald-600 mb-6">{plan.price}</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-6">
+                {plan.amount.toLocaleString("fr-FR")} <span className="text-xl">FCFA</span>
+              </div>
               <div className="space-y-3 mb-8">
                 {plan.features.map((feature, i) => (
                   <div key={i} className="flex items-center gap-3">
@@ -53,19 +89,20 @@ function PaiementPage() {
                   </div>
                 ))}
               </div>
-              <a
-                href="https://wa.me/22788376133"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => choose(plan.amount, plan.programme)}
                 className="block text-center w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold hover:opacity-90 transition"
               >
-                Choisir ce plan
-              </a>
+                Payer avec iPay Money
+              </button>
             </div>
           ))}
         </div>
 
-        <IPayForm />
+        <div id="ipay" className="scroll-mt-8">
+          <IPayForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
+        </div>
 
         <div className="bg-gradient-to-r from-emerald-500 to-green-700 rounded-3xl p-8 mb-12 text-center shadow-2xl text-white">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white/20 border border-white/30 mb-3">
