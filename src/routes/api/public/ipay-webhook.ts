@@ -66,7 +66,29 @@ export const Route = createFileRoute("/api/public/ipay-webhook")({
           return json({ ok: false, error: error.message }, 500);
         }
 
-        return json({ ok: true });
+        // Paiement validé → émission (idempotente) de la licence d'accès.
+        let license: string | null = null;
+        if (status === "success") {
+          try {
+            const { data: row } = await supabaseAdmin
+              .from("payments")
+              .select("transaction_id")
+              .eq(
+                transactionId ? "transaction_id" : "reference",
+                (transactionId ?? reference)!,
+              )
+              .maybeSingle();
+            if (row?.transaction_id) {
+              const { issueLicenseForPayment } = await import("@/lib/licenses.server");
+              const issued = await issueLicenseForPayment(row.transaction_id);
+              license = issued?.code ?? null;
+            }
+          } catch (e) {
+            console.error("license issue failed", e);
+          }
+        }
+
+        return json({ ok: true, license });
       },
     },
   },

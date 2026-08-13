@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      licenses: {
+        Row: {
+          amount: number
+          code: string
+          created_at: string
+          customer_name: string
+          expires_at: string | null
+          id: string
+          issued_at: string
+          programme: string | null
+          reference: string | null
+          status: string
+          transaction_id: string
+        }
+        Insert: {
+          amount: number
+          code: string
+          created_at?: string
+          customer_name: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string
+          programme?: string | null
+          reference?: string | null
+          status?: string
+          transaction_id: string
+        }
+        Update: {
+          amount?: number
+          code?: string
+          created_at?: string
+          customer_name?: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string
+          programme?: string | null
+          reference?: string | null
+          status?: string
+          transaction_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number

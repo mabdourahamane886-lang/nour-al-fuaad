@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getPublicPayment } from "@/lib/payment-status.functions";
+import { getLicense } from "@/lib/licenses.functions";
 import { jsPDF } from "jspdf";
 
 export const Route = createFileRoute("/statut/$transactionId")({
@@ -29,8 +30,22 @@ type Payment = {
 function StatutPage() {
   const { transactionId } = Route.useParams();
   const fetchPayment = useServerFn(getPublicPayment);
+  const fetchLicense = useServerFn(getLicense);
   const [payment, setPayment] = useState<Payment | null>(null);
+  const [license, setLicense] = useState<{
+    code: string;
+    programme: string | null;
+    expires_at: string | null;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (payment?.status !== "success" || license) return;
+    fetchLicense({ data: { transaction_id: transactionId } })
+      .then((r) => setLicense(r.license))
+      .catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payment?.status]);
 
   useEffect(() => {
     let mounted = true;
@@ -121,6 +136,35 @@ function StatutPage() {
             <Row label="Payé le" value={new Date(payment.paid_at).toLocaleString("fr-FR")} />
           )}
         </div>
+
+        {license && (
+          <div className="mt-6 rounded-3xl p-8 bg-emerald-500/10 border border-emerald-500/30 text-center">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-emerald-300 mb-2">
+              Licence d'accès instantanée
+            </div>
+            <div className="font-mono text-2xl font-bold text-emerald-200 break-all">
+              {license.code}
+            </div>
+            <div className="text-xs text-slate-300 mt-2">
+              {license.programme ?? "Accès aux cours"} ·{" "}
+              {license.expires_at
+                ? `valable jusqu'au ${new Date(license.expires_at).toLocaleDateString("fr-FR")}`
+                : "sans expiration"}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-3 justify-center">
+              <button
+                type="button"
+                onClick={() => navigator.clipboard?.writeText(license.code)}
+                className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 text-sm font-semibold"
+              >
+                Copier le code
+              </button>
+              <Link to="/licence" className="px-4 py-2 rounded-xl border border-emerald-500/40 text-sm text-emerald-200">
+                Vérifier la licence
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 flex flex-wrap gap-3 justify-center">
           {payment.status === "success" && (
