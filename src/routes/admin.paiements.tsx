@@ -59,7 +59,7 @@ function AdminPaiementsPage() {
     let mounted = true;
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
-      if (!data.session) navigate({ to: "/login" });
+      if (!data.session) navigate({ to: "/login", search: { next: "/admin/paiements" } });
       else load(status);
     });
     return () => {
@@ -96,7 +96,7 @@ function AdminPaiementsPage() {
           <button
             onClick={async () => {
               await supabase.auth.signOut();
-              navigate({ to: "/login" });
+              navigate({ to: "/login", search: { next: "/admin/paiements" } });
             }}
             className="px-4 py-2 rounded-xl border border-slate-700 hover:border-slate-500 text-sm"
           >
