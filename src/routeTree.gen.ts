@@ -13,6 +13,7 @@ import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as PaiementRouteImport } from './routes/paiement'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LicenceRouteImport } from './routes/licence'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ArabeRouteImport } from './routes/arabe'
@@ -44,6 +45,11 @@ const McpRoute = McpRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LicenceRoute = LicenceRouteImport.update({
+  id: '/licence',
+  path: '/licence',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InscriptionRoute = InscriptionRouteImport.update({
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/arabe': typeof ArabeRoute
   '/cours': typeof CoursRoute
   '/inscription': typeof InscriptionRoute
+  '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/paiement': typeof PaiementRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/licence'
     | '/login'
     | '/mcp'
     | '/paiement'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/licence'
     | '/login'
     | '/mcp'
     | '/paiement'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/arabe'
     | '/cours'
     | '/inscription'
+    | '/licence'
     | '/login'
     | '/mcp'
     | '/paiement'
@@ -227,6 +239,7 @@ export interface RootRouteChildren {
   ArabeRoute: typeof ArabeRoute
   CoursRoute: typeof CoursRoute
   InscriptionRoute: typeof InscriptionRoute
+  LicenceRoute: typeof LicenceRoute
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
   PaiementRoute: typeof PaiementRoute
@@ -269,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/licence': {
+      id: '/licence'
+      path: '/licence'
+      fullPath: '/licence'
+      preLoaderRoute: typeof LicenceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription': {
@@ -363,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArabeRoute: ArabeRoute,
   CoursRoute: CoursRoute,
   InscriptionRoute: InscriptionRoute,
+  LicenceRoute: LicenceRoute,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
   PaiementRoute: PaiementRoute,
