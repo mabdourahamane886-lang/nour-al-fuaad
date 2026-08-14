@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
+import { DepotDirect } from "@/components/DepotDirect";
 
 export const Route = createFileRoute("/paiement")({
   head: () => ({
@@ -143,23 +144,7 @@ function PaiementPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-emerald-600 to-green-800 rounded-3xl p-10 text-center shadow-2xl mb-12 text-white">
-          <h2 className="text-4xl font-bold mb-4">Numéro de dépôt</h2>
-          <p className="text-lg text-white/90 mb-6 max-w-2xl mx-auto">
-            Effectuez votre dépôt sur My Nita, Amana ta ou Wave, puis envoyez le justificatif via WhatsApp.
-          </p>
-          <a href="tel:+22788376133" className="inline-block text-5xl font-bold tracking-wide mb-6">+227 88 37 61 33</a>
-          <div>
-            <a
-              href="https://wa.me/22788376133"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-emerald-700 font-semibold hover:scale-105 transition-transform"
-            >
-              Envoyer le justificatif via WhatsApp
-            </a>
-          </div>
-        </div>
+        <DepotDirect />
 
         <div className="text-center text-emerald-900/60">
           © {new Date().getFullYear()} NOUROUL FOUA'AD • Niger 🇳🇪

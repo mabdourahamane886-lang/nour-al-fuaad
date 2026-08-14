@@ -1,4 +1,5 @@
 import { useState } from "react";
+import qrMyNita from "@/assets/qr-mynita.jpeg.asset.json";
 
 const NUMBER = "88376133";
 const NUMBER_DISPLAY = "+227 88 37 61 33";
@@ -62,6 +63,20 @@ export function DepotDirect() {
             <div className="mt-3 font-semibold text-emerald-700">{NUMBER_DISPLAY}</div>
           </div>
         ))}
+      </div>
+
+      <div className="max-w-md mx-auto mb-8 rounded-3xl border border-emerald-200 bg-emerald-50/60 p-6 text-center">
+        <div className="font-bold text-emerald-900 mb-1">Scanner My Nita</div>
+        <p className="text-sm text-emerald-900/70 mb-4">
+          Ouvrez My Nita, choisissez « Scanner », puis flashez ce code pour payer directement.
+        </p>
+        <img
+          src={qrMyNita.url}
+          alt="QR code My Nita pour payer NOUROUL FOUA'AD"
+          loading="lazy"
+          className="mx-auto w-56 h-56 object-contain bg-white rounded-2xl p-3 border border-emerald-200"
+        />
+        <div className="mt-3 text-sm font-semibold text-emerald-700">{NUMBER_DISPLAY}</div>
       </div>
 
       <ol className="max-w-2xl mx-auto space-y-2 text-emerald-900/80 mb-8">
