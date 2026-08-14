@@ -1,13 +1,16 @@
 import { useState } from "react";
 import qrMyNita from "@/assets/qr-mynita.jpeg.asset.json";
+import nitaLogo from "@/assets/nita.jpeg.asset.json";
+import amanaLogo from "@/assets/amana.jpeg.asset.json";
+import waveLogo from "@/assets/wave.jpeg.asset.json";
 
 const NUMBER = "88376133";
 const NUMBER_DISPLAY = "+227 88 37 61 33";
 
 const operators = [
-  { name: "My Nita", icon: "🇳🇪", hint: "Dépôt sur compte My Nita" },
-  { name: "Amana ta", icon: "🛡️", hint: "Dépôt sur compte Amana ta" },
-  { name: "Wave", icon: "🌊", hint: "Envoi Wave instantané" },
+  { name: "My Nita", logo: nitaLogo.url, hint: "Dépôt sur compte My Nita" },
+  { name: "Amana ta", logo: amanaLogo.url, hint: "Dépôt sur compte Amana ta" },
+  { name: "Wave", logo: waveLogo.url, hint: "Envoi Wave instantané" },
 ];
 
 export function DepotDirect() {
@@ -57,7 +60,12 @@ export function DepotDirect() {
             key={op.name}
             className="rounded-3xl border border-emerald-200 bg-emerald-50/60 p-6 text-center hover:scale-105 transition-transform"
           >
-            <div className="text-4xl mb-3">{op.icon}</div>
+            <img
+              src={op.logo}
+              alt={`Logo ${op.name}`}
+              loading="lazy"
+              className="mx-auto mb-3 h-16 w-16 rounded-2xl object-contain bg-white p-1 border border-emerald-200"
+            />
             <div className="font-bold text-emerald-900 text-lg">{op.name}</div>
             <div className="text-sm text-emerald-900/70 mt-1">{op.hint}</div>
             <div className="mt-3 font-semibold text-emerald-700">{NUMBER_DISPLAY}</div>
