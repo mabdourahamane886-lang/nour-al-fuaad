@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
 import { DepotDirect } from "@/components/DepotDirect";
+import nitaLogo from "@/assets/nita.jpeg.asset.json";
+import amanaLogo from "@/assets/amana.jpeg.asset.json";
+import waveLogo from "@/assets/wave.jpeg.asset.json";
 
 export const Route = createFileRoute("/paiement")({
   head: () => ({
@@ -14,12 +17,12 @@ export const Route = createFileRoute("/paiement")({
 });
 
 const methods = [
-  { name: "Wave", icon: "🌊", color: "from-blue-500 to-cyan-500" },
+  { name: "Wave", logo: waveLogo.url, color: "from-blue-500 to-cyan-500" },
   { name: "Visa", icon: "💳", color: "from-indigo-500 to-blue-600" },
   { name: "Mastercard", icon: "🏦", color: "from-orange-500 to-red-500" },
   { name: "Orange Money", icon: "🟧", color: "from-orange-400 to-orange-600" },
-  { name: "Amanata", icon: "🛡️", color: "from-green-500 to-emerald-600" },
-  { name: "NITA", icon: "🇳🇪", color: "from-yellow-500 to-amber-600" },
+  { name: "Amanata", logo: amanaLogo.url, color: "from-green-500 to-emerald-600" },
+  { name: "NITA", logo: nitaLogo.url, color: "from-yellow-500 to-amber-600" },
   { name: "Moov Money", icon: "📱", color: "from-emerald-500 to-green-700" },
 ];
 
@@ -137,7 +140,16 @@ function PaiementPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
             {methods.map((method, index) => (
               <div key={index} className={`rounded-3xl p-5 bg-gradient-to-br ${method.color} shadow-xl text-center text-white hover:scale-105 transition-all duration-300`}>
-                <div className="text-4xl mb-3">{method.icon}</div>
+                {method.logo ? (
+                  <img
+                    src={method.logo}
+                    alt={`Logo ${method.name}`}
+                    loading="lazy"
+                    className="mx-auto mb-3 h-12 w-12 rounded-xl object-contain bg-white p-1"
+                  />
+                ) : (
+                  <div className="text-4xl mb-3">{method.icon}</div>
+                )}
                 <div className="font-bold">{method.name}</div>
               </div>
             ))}
