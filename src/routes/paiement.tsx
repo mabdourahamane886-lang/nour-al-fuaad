@@ -18,12 +18,8 @@ export const Route = createFileRoute("/paiement")({
 
 const methods = [
   { name: "Wave", logo: waveLogo.url, color: "from-blue-500 to-cyan-500" },
-  { name: "Visa", icon: "💳", color: "from-indigo-500 to-blue-600" },
-  { name: "Mastercard", icon: "🏦", color: "from-orange-500 to-red-500" },
-  { name: "Orange Money", icon: "🟧", color: "from-orange-400 to-orange-600" },
   { name: "Amanata", logo: amanaLogo.url, color: "from-green-500 to-emerald-600" },
   { name: "NITA", logo: nitaLogo.url, color: "from-yellow-500 to-amber-600" },
-  { name: "Moov Money", icon: "📱", color: "from-emerald-500 to-green-700" },
 ];
 
 const plans = [
