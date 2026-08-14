@@ -18,12 +18,8 @@ export const Route = createFileRoute("/paiement")({
 
 const methods = [
   { name: "Wave", logo: waveLogo.url, color: "from-blue-500 to-cyan-500" },
-  { name: "Visa", icon: "💳", color: "from-indigo-500 to-blue-600" },
-  { name: "Mastercard", icon: "🏦", color: "from-orange-500 to-red-500" },
-  { name: "Orange Money", icon: "🟧", color: "from-orange-400 to-orange-600" },
   { name: "Amanata", logo: amanaLogo.url, color: "from-green-500 to-emerald-600" },
   { name: "NITA", logo: nitaLogo.url, color: "from-yellow-500 to-amber-600" },
-  { name: "Moov Money", icon: "📱", color: "from-emerald-500 to-green-700" },
 ];
 
 const plans = [
@@ -131,25 +127,21 @@ function PaiementPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
               <h2 className="text-3xl font-bold mb-2 text-emerald-900">Méthodes de paiement</h2>
-              <p className="text-emerald-900/70">Compatible avec les paiements mobiles et cartes bancaires.</p>
+              <p className="text-emerald-900/70">Compatible avec les paiements mobiles.</p>
             </div>
             <div className="px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-300 w-fit">
               Système sécurisé
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {methods.map((method, index) => (
               <div key={index} className={`rounded-3xl p-5 bg-gradient-to-br ${method.color} shadow-xl text-center text-white hover:scale-105 transition-all duration-300`}>
-                {method.logo ? (
-                  <img
-                    src={method.logo}
-                    alt={`Logo ${method.name}`}
-                    loading="lazy"
-                    className="mx-auto mb-3 h-12 w-12 rounded-xl object-contain bg-white p-1"
-                  />
-                ) : (
-                  <div className="text-4xl mb-3">{method.icon}</div>
-                )}
+                <img
+                  src={method.logo}
+                  alt={`Logo ${method.name}`}
+                  loading="lazy"
+                  className="mx-auto mb-3 h-12 w-12 rounded-xl object-contain bg-white p-1"
+                />
                 <div className="font-bold">{method.name}</div>
               </div>
             ))}
