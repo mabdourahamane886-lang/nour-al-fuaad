@@ -1,4 +1,5 @@
 import { Link, Outlet } from "@tanstack/react-router";
+import siteLogo from "@/assets/logo.jpeg.asset.json";
 
 const nav = [
   { to: "/", label: "Accueil" },
@@ -15,9 +16,11 @@ export function SiteLayout() {
       <header className="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "var(--gradient-gold)" }}>
-              <span className="font-arabic text-xl text-[oklch(0.22_0.04_160)]">ن</span>
-            </div>
+            <img
+              src={siteLogo.url}
+              alt="Logo NOUROUL FOUA'AD"
+              className="w-10 h-10 rounded-full object-cover bg-white"
+            />
             <div className="leading-tight">
               <div className="font-display text-lg font-semibold tracking-wide" style={{ fontFamily: "var(--font-display)" }}>NOUROUL FOUA'AD</div>
               <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Lumière du cœur</div>
@@ -61,7 +64,12 @@ export function SiteLayout() {
       <footer className="mt-24 border-t border-border" style={{ background: "var(--gradient-hero)" }}>
         <div className="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-3 gap-10 text-primary-foreground">
           <div>
-            <div className="font-arabic text-3xl mb-3">نور الفؤاد</div>
+            <img
+              src={siteLogo.url}
+              alt="Logo NOUROUL FOUA'AD"
+              loading="lazy"
+              className="w-20 h-20 rounded-2xl object-cover bg-white mb-3"
+            />
             <h3 className="text-2xl mb-2" style={{ fontFamily: "var(--font-display)" }}>NOUROUL FOUA'AD</h3>
             <p className="text-sm opacity-80">Apprendre le Coran, la langue arabe et les sciences islamiques avec sérénité et accompagnement.</p>
           </div>
