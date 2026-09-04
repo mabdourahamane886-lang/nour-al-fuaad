@@ -8,6 +8,7 @@ const nav = [
   { to: "/spirituel", label: "Versets & Hadiths" },
   { to: "/paiement", label: "Paiement" },
   { to: "/inscription", label: "Inscription" },
+  { to: "/mon-espace", label: "Mon espace" },
 ] as const;
 
 export function SiteLayout() {
