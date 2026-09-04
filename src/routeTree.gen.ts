@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
 import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
+import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
@@ -93,6 +94,11 @@ const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
   path: '/admin/paiements',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminInscriptionsRoute = AdminInscriptionsRouteImport.update({
+  id: '/admin/inscriptions',
+  path: '/admin/inscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
@@ -198,6 +207,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/inscriptions'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/inscriptions'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/spirituel'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/inscriptions'
     | '/admin/paiements'
     | '/recu/$reference'
     | '/statut/$transactionId'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   SpirituelRoute: typeof SpirituelRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AdminInscriptionsRoute: typeof AdminInscriptionsRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
   RecuReferenceRoute: typeof RecuReferenceRoute
   StatutTransactionIdRoute: typeof StatutTransactionIdRoute
@@ -360,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPaiementsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/inscriptions': {
+      id: '/admin/inscriptions'
+      path: '/admin/inscriptions'
+      fullPath: '/admin/inscriptions'
+      preLoaderRoute: typeof AdminInscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -412,6 +432,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AdminInscriptionsRoute: AdminInscriptionsRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
   RecuReferenceRoute: RecuReferenceRoute,
   StatutTransactionIdRoute: StatutTransactionIdRoute,
