@@ -120,12 +120,28 @@ export function InscriptionForm() {
         {errors.program && <p className="text-xs text-destructive mt-1.5">{errors.program}</p>}
       </div>
 
+      {errors.form && <p className="text-xs text-destructive">{errors.form}</p>}
+
+      {trackingCode && (
+        <div className="p-5 rounded-xl bg-accent/10 border border-accent/25 text-center space-y-2">
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Votre code de suivi</p>
+          <p className="font-mono text-xl text-primary">{trackingCode}</p>
+          <p className="text-xs text-muted-foreground">
+            Conservez ce code : il vous permet de suivre votre inscription.
+          </p>
+          <Link to="/mon-espace" className="inline-block text-sm text-accent underline">
+            Suivre mon inscription →
+          </Link>
+        </div>
+      )}
+
       <button
         type="submit"
-        className="w-full px-8 py-4 rounded-full text-primary-foreground font-medium hover:scale-[1.02] transition-transform"
+        disabled={submitting}
+        className="w-full px-8 py-4 rounded-full text-primary-foreground font-medium hover:scale-[1.02] transition-transform disabled:opacity-60"
         style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}
       >
-        Continuer vers le paiement
+        {submitting ? "Enregistrement…" : "Continuer vers le paiement"}
       </button>
       <p className="text-xs text-muted-foreground text-center">
         Vous serez redirigé vers WhatsApp pour finaliser le paiement avec un de nos enseignants.
