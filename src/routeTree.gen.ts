@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as MonEspaceRouteImport } from './routes/mon-espace'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LicenceRouteImport } from './routes/licence'
@@ -35,6 +36,11 @@ const SpirituelRoute = SpirituelRouteImport.update({
 const PaiementRoute = PaiementRouteImport.update({
   id: '/paiement',
   path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MonEspaceRoute = MonEspaceRouteImport.update({
+  id: '/mon-espace',
+  path: '/mon-espace',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/mon-espace': typeof MonEspaceRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/mon-espace': typeof MonEspaceRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/licence': typeof LicenceRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/mon-espace': typeof MonEspaceRoute
   '/paiement': typeof PaiementRoute
   '/spirituel': typeof SpirituelRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/licence'
     | '/login'
     | '/mcp'
+    | '/mon-espace'
     | '/paiement'
     | '/spirituel'
     | '/.mcp/list-tools'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/licence'
     | '/login'
     | '/mcp'
+    | '/mon-espace'
     | '/paiement'
     | '/spirituel'
     | '/.mcp/list-tools'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/licence'
     | '/login'
     | '/mcp'
+    | '/mon-espace'
     | '/paiement'
     | '/spirituel'
     | '/.mcp/list-tools'
@@ -242,6 +254,7 @@ export interface RootRouteChildren {
   LicenceRoute: typeof LicenceRoute
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
+  MonEspaceRoute: typeof MonEspaceRoute
   PaiementRoute: typeof PaiementRoute
   SpirituelRoute: typeof SpirituelRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -268,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/paiement'
       fullPath: '/paiement'
       preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mon-espace': {
+      id: '/mon-espace'
+      path: '/mon-espace'
+      fullPath: '/mon-espace'
+      preLoaderRoute: typeof MonEspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -386,6 +406,7 @@ const rootRouteChildren: RootRouteChildren = {
   LicenceRoute: LicenceRoute,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
+  MonEspaceRoute: MonEspaceRoute,
   PaiementRoute: PaiementRoute,
   SpirituelRoute: SpirituelRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
