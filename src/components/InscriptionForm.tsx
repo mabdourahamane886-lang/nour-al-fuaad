@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { z } from "zod";
+import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { createInscription } from "@/lib/inscriptions.functions";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Nom trop court").max(80, "Nom trop long"),
@@ -23,8 +26,11 @@ const programs = [
 export function InscriptionForm() {
   const [values, setValues] = useState({ name: "", whatsapp: "", program: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const register = useServerFn(createInscription);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(values);
     if (!result.success) {
@@ -36,15 +42,37 @@ export function InscriptionForm() {
       return;
     }
     setErrors({});
+    setSubmitting(true);
+
+    let code: string | null = null;
+    try {
+      const res = await register({
+        data: {
+          customer_name: result.data.name,
+          whatsapp: result.data.whatsapp,
+          programme: result.data.program,
+        },
+      });
+      code = res.tracking_code;
+      setTrackingCode(code);
+      window.localStorage.setItem("nf_tracking_code", code);
+    } catch (err) {
+      setErrors({ form: (err as Error).message });
+    } finally {
+      setSubmitting(false);
+    }
+
     const message =
       `Assalâmu ‘alaykum,\n\nJe souhaite m'inscrire à NOUROUL FOUA'AD.\n\n` +
       `Nom : ${result.data.name}\n` +
       `WhatsApp : ${result.data.whatsapp}\n` +
-      `Programme : ${result.data.program}\n\n` +
-      `Merci de m'indiquer la suite pour le paiement.`;
+      `Programme : ${result.data.program}\n` +
+      (code ? `Code de suivi : ${code}\n` : "") +
+      `\nMerci de m'indiquer la suite pour le paiement.`;
     const url = `https://wa.me/22788376133?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
 
   const set = (k: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setValues((v) => ({ ...v, [k]: e.target.value }));
