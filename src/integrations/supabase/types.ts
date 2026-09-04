@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      inscriptions: {
+        Row: {
+          access_granted_at: string | null
+          created_at: string
+          customer_name: string
+          id: string
+          note: string | null
+          programme: string
+          status: string
+          tracking_code: string
+          updated_at: string
+          validated_at: string | null
+          whatsapp: string
+        }
+        Insert: {
+          access_granted_at?: string | null
+          created_at?: string
+          customer_name: string
+          id?: string
+          note?: string | null
+          programme: string
+          status?: string
+          tracking_code: string
+          updated_at?: string
+          validated_at?: string | null
+          whatsapp: string
+        }
+        Update: {
+          access_granted_at?: string | null
+          created_at?: string
+          customer_name?: string
+          id?: string
+          note?: string | null
+          programme?: string
+          status?: string
+          tracking_code?: string
+          updated_at?: string
+          validated_at?: string | null
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       licenses: {
         Row: {
           amount: number
