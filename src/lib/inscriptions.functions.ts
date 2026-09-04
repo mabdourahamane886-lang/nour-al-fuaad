@@ -126,7 +126,12 @@ export const updateInscriptionStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const db = await assertAdmin(context.userId);
     const now = new Date().toISOString();
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: {
+      status: InscriptionStatus;
+      note?: string | null;
+      validated_at?: string | null;
+      access_granted_at?: string | null;
+    } = { status: data.status };
     if (data.note !== undefined) patch.note = data.note || null;
     if (data.status === "validated") {
       patch.validated_at = now;
