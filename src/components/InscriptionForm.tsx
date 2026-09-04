@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { z } from "zod";
+import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { createInscription } from "@/lib/inscriptions.functions";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Nom trop court").max(80, "Nom trop long"),
@@ -23,8 +26,11 @@ const programs = [
 export function InscriptionForm() {
   const [values, setValues] = useState({ name: "", whatsapp: "", program: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const register = useServerFn(createInscription);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(values);
     if (!result.success) {
@@ -36,15 +42,37 @@ export function InscriptionForm() {
       return;
     }
     setErrors({});
+    setSubmitting(true);
+
+    let code: string | null = null;
+    try {
+      const res = await register({
+        data: {
+          customer_name: result.data.name,
+          whatsapp: result.data.whatsapp,
+          programme: result.data.program,
+        },
+      });
+      code = res.tracking_code;
+      setTrackingCode(code);
+      window.localStorage.setItem("nf_tracking_code", code);
+    } catch (err) {
+      setErrors({ form: (err as Error).message });
+    } finally {
+      setSubmitting(false);
+    }
+
     const message =
       `Assalâmu ‘alaykum,\n\nJe souhaite m'inscrire à NOUROUL FOUA'AD.\n\n` +
       `Nom : ${result.data.name}\n` +
       `WhatsApp : ${result.data.whatsapp}\n` +
-      `Programme : ${result.data.program}\n\n` +
-      `Merci de m'indiquer la suite pour le paiement.`;
+      `Programme : ${result.data.program}\n` +
+      (code ? `Code de suivi : ${code}\n` : "") +
+      `\nMerci de m'indiquer la suite pour le paiement.`;
     const url = `https://wa.me/22788376133?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
 
   const set = (k: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -92,12 +120,28 @@ export function InscriptionForm() {
         {errors.program && <p className="text-xs text-destructive mt-1.5">{errors.program}</p>}
       </div>
 
+      {errors.form && <p className="text-xs text-destructive">{errors.form}</p>}
+
+      {trackingCode && (
+        <div className="p-5 rounded-xl bg-accent/10 border border-accent/25 text-center space-y-2">
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Votre code de suivi</p>
+          <p className="font-mono text-xl text-primary">{trackingCode}</p>
+          <p className="text-xs text-muted-foreground">
+            Conservez ce code : il vous permet de suivre votre inscription.
+          </p>
+          <Link to="/mon-espace" className="inline-block text-sm text-accent underline">
+            Suivre mon inscription →
+          </Link>
+        </div>
+      )}
+
       <button
         type="submit"
-        className="w-full px-8 py-4 rounded-full text-primary-foreground font-medium hover:scale-[1.02] transition-transform"
+        disabled={submitting}
+        className="w-full px-8 py-4 rounded-full text-primary-foreground font-medium hover:scale-[1.02] transition-transform disabled:opacity-60"
         style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}
       >
-        Continuer vers le paiement
+        {submitting ? "Enregistrement…" : "Continuer vers le paiement"}
       </button>
       <p className="text-xs text-muted-foreground text-center">
         Vous serez redirigé vers WhatsApp pour finaliser le paiement avec un de nos enseignants.
