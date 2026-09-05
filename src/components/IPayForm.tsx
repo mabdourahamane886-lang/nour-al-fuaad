@@ -5,11 +5,11 @@ import { createIPayMobilePayment } from "@/lib/ipay.functions";
 import { supabase } from "@/integrations/supabase/client";
 
 const presets = [
-  { label: "Inscription Sciences", value: 2500 },
-  { label: "Inscription Arabe", value: 1000 },
-  { label: "Début Arabe", value: 2500 },
-  { label: "Arabe — complet", value: 3000 },
-  { label: "Mensualité", value: 4000 },
+  { label: "Inscription Sciences", value: 3000 },
+  { label: "Inscription Arabe", value: 1500 },
+  { label: "Début Arabe", value: 3000 },
+  { label: "Arabe — complet", value: 4000 },
+  { label: "Mensualité", value: 5000 },
 ];
 
 // Normalise un numéro Niger : retire +, espaces, indicatif 227 / 00227.
@@ -31,7 +31,7 @@ export function IPayForm({
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
   const [msisdnError, setMsisdnError] = useState<string | null>(null);
-  const [amount, setAmount] = useState(presetAmount ?? 2500);
+  const [amount, setAmount] = useState(presetAmount ?? 3000);
   const [programme, setProgramme] = useState(presetProgramme ?? presets[0].label);
   const [loading, setLoading] = useState(false);
 

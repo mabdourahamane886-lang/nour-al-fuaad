@@ -25,25 +25,25 @@ const methods = [
 const plans = [
   {
     name: "Inscription Sciences",
-    amount: 2500,
+    amount: 3000,
     programme: "Inscription Sciences",
     features: ["Frais d'inscription unique", "Coran, Hadith, Fiqh", "Support WhatsApp"],
   },
   {
     name: "Mensualité Sciences",
-    amount: 4000,
+    amount: 5000,
     programme: "Mensualité",
     features: ["Paiement mensuel", "3 séances / semaine", "Accompagnement"],
   },
   {
     name: "Inscription Arabe",
-    amount: 1000,
+    amount: 1500,
     programme: "Inscription Arabe",
     features: ["Frais d'inscription unique", "Langue arabe", "Suivi personnalisé"],
   },
   {
     name: "Langue Arabe — complet",
-    amount: 3000,
+    amount: 4000,
     programme: "Arabe — complet",
     features: ["Cours en direct", "Exercices guidés", "Niveau avancé"],
   },
