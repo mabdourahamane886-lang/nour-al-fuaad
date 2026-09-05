@@ -5,7 +5,7 @@ export const Route = createFileRoute("/arabe")({
   head: () => ({
     meta: [
       { title: "Apprendre la langue arabe — NOUROUL FOUA'AD" },
-      { name: "description", content: "Cours d'arabe : débutant 2500F, inscription 1000F, mensualité 3000F. Lecture, écriture et compréhension du Coran." },
+      { name: "description", content: "Cours d'arabe : débutant 3000F, inscription 1500F, mensualité 4000F. Lecture, écriture et compréhension du Coran." },
     ],
   }),
   component: ArabePage,
@@ -42,9 +42,9 @@ function ArabePage() {
           <h2 className="text-4xl text-primary">Langue arabe</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <PriceCard label="Inscription" price="1 000" />
-          <PriceCard label="Niveau débutant" price="2 500" />
-          <PriceCard label="Apprentissage" price="3 000" highlight />
+          <PriceCard label="Inscription" price="1 500" />
+          <PriceCard label="Niveau débutant" price="3 000" />
+          <PriceCard label="Apprentissage" price="4 000" highlight />
         </div>
       </section>
 
