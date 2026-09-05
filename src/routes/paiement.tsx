@@ -10,7 +10,7 @@ export const Route = createFileRoute("/paiement")({
   head: () => ({
     meta: [
       { title: "Paiement — NOUROUL FOUA'AD" },
-      { name: "description", content: "Moyens de paiement acceptés : Wave, Visa, Mastercard, Orange Money, Amanata, NITA." },
+      { name: "description", content: "Moyens de paiement acceptés : Wave, Amana ta, NITA. Mensualités par niveau et inscriptions via iPay Money." },
     ],
   }),
   component: PaiementPage,
@@ -30,10 +30,22 @@ const plans = [
     features: ["Frais d'inscription unique", "Coran, Hadith, Fiqh", "Support WhatsApp"],
   },
   {
-    name: "Mensualité Sciences",
+    name: "Mensualité — Débutant",
+    amount: 3000,
+    programme: "Mensualité Débutant",
+    features: ["Par mois", "3 séances / semaine", "Alphabetisation, bases"],
+  },
+  {
+    name: "Mensualité — Intermédiaire",
+    amount: 4000,
+    programme: "Mensualité Intermédiaire",
+    features: ["Par mois", "3 séances / semaine", "Mémorisation, fiqh"],
+  },
+  {
+    name: "Mensualité — Avancé",
     amount: 5000,
-    programme: "Mensualité",
-    features: ["Paiement mensuel", "3 séances / semaine", "Accompagnement"],
+    programme: "Mensualité Avancé",
+    features: ["Par mois", "3 séances / semaine", "Tafsir, hadiths approfondis"],
   },
   {
     name: "Inscription Arabe",
