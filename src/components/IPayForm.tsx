@@ -9,7 +9,13 @@ const presets = [
   { label: "Inscription Arabe", value: 1500 },
   { label: "Début Arabe", value: 3000 },
   { label: "Arabe — complet", value: 4000 },
-  { label: "Mensualité", value: 5000 },
+];
+
+// Mensualités par niveau (montant par mois).
+const niveaux = [
+  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 3000 },
+  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 4000 },
+  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 5000 },
 ];
 
 // Normalise un numéro Niger : retire +, espaces, indicatif 227 / 00227.
