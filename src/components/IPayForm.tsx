@@ -9,7 +9,13 @@ const presets = [
   { label: "Inscription Arabe", value: 1500 },
   { label: "Début Arabe", value: 3000 },
   { label: "Arabe — complet", value: 4000 },
-  { label: "Mensualité", value: 5000 },
+];
+
+// Mensualités par niveau (montant par mois).
+const niveaux = [
+  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 3000 },
+  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 4000 },
+  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 5000 },
 ];
 
 // Normalise un numéro Niger : retire +, espaces, indicatif 227 / 00227.
@@ -163,7 +169,7 @@ export function IPayForm({
         </div>
         <div className="md:col-span-2">
           <label className="block text-xs uppercase tracking-[0.2em] text-emerald-700 mb-2">Programme</label>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap gap-2 mb-4">
             {presets.map((p) => (
               <button
                 type="button"
@@ -173,7 +179,7 @@ export function IPayForm({
                   setProgramme(p.label);
                 }}
                 className={`px-3 py-2 text-sm rounded-full border transition ${
-                  amount === p.value
+                  amount === p.value && programme === p.label
                     ? "bg-emerald-500 border-emerald-500 text-white font-semibold"
                     : "border-emerald-200 text-emerald-800 hover:border-emerald-400"
                 }`}
@@ -182,6 +188,57 @@ export function IPayForm({
               </button>
             ))}
           </div>
+
+          <p className="block text-xs uppercase tracking-[0.2em] text-emerald-700 mb-2">
+            Mensualité par niveau
+          </p>
+          <div className="overflow-hidden rounded-xl border border-emerald-200 mb-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-emerald-50 text-emerald-800 text-left">
+                  <th className="px-4 py-2 font-semibold">Niveau</th>
+                  <th className="px-4 py-2 font-semibold hidden sm:table-cell">Contenu</th>
+                  <th className="px-4 py-2 font-semibold">Montant / mois</th>
+                  <th className="px-4 py-2" aria-label="Choisir" />
+                </tr>
+              </thead>
+              <tbody>
+                {niveaux.map((n) => {
+                  const label = `Mensualité ${n.niveau}`;
+                  const selected = programme === label;
+                  return (
+                    <tr
+                      key={n.niveau}
+                      className={`border-t border-emerald-100 ${selected ? "bg-emerald-50/70" : ""}`}
+                    >
+                      <td className="px-4 py-2 font-medium text-emerald-950">{n.niveau}</td>
+                      <td className="px-4 py-2 text-emerald-900/70 hidden sm:table-cell">{n.description}</td>
+                      <td className="px-4 py-2 font-semibold text-emerald-800">
+                        {n.value.toLocaleString("fr-FR")} F
+                      </td>
+                      <td className="px-4 py-2 text-right">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAmount(n.value);
+                            setProgramme(label);
+                          }}
+                          className={`px-3 py-1.5 text-xs rounded-full border transition ${
+                            selected
+                              ? "bg-emerald-500 border-emerald-500 text-white font-semibold"
+                              : "border-emerald-300 text-emerald-800 hover:border-emerald-500"
+                          }`}
+                        >
+                          {selected ? "Sélectionné" : "Choisir"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
           <input
             type="number"
             min={100}
