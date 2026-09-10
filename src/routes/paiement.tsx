@@ -68,7 +68,7 @@ function PaiementPage() {
 
   const choose = (amount: number, programme: string) => {
     setSelected({ amount, programme });
-    document.getElementById("ipay")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("paiement-en-ligne")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
