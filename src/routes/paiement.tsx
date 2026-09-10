@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
+import { MoneyFusionForm } from "@/components/MoneyFusionForm";
+
 import { DepotDirect } from "@/components/DepotDirect";
 import nitaLogo from "@/assets/nita.jpeg.asset.json";
 import amanaLogo from "@/assets/amana.jpeg.asset.json";
@@ -66,7 +68,7 @@ function PaiementPage() {
 
   const choose = (amount: number, programme: string) => {
     setSelected({ amount, programme });
-    document.getElementById("ipay")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("paiement-en-ligne")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -106,15 +108,25 @@ function PaiementPage() {
                 onClick={() => choose(plan.amount, plan.programme)}
                 className="block text-center w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold hover:opacity-90 transition"
               >
-                Payer avec iPay Money
+                Payer en ligne
               </button>
             </div>
           ))}
         </div>
 
-        <div id="ipay" className="scroll-mt-8">
-          <IPayForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
+        <div id="paiement-en-ligne" className="scroll-mt-8">
+          <MoneyFusionForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
         </div>
+
+        <details id="ipay" className="mb-12 scroll-mt-8 rounded-3xl border border-emerald-200 bg-white p-6">
+          <summary className="cursor-pointer font-semibold text-emerald-900">
+            Autre option : payer avec iPay Money (secours)
+          </summary>
+          <div className="mt-6">
+            <IPayForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
+          </div>
+        </details>
+
 
         <div className="bg-gradient-to-r from-emerald-500 to-green-700 rounded-3xl p-8 mb-12 text-center shadow-2xl text-white">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white/20 border border-white/30 mb-3">

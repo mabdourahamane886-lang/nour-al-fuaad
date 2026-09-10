@@ -25,6 +25,7 @@ import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as ApiPublicMoneyfusionWebhookRouteImport } from './routes/api/public/moneyfusion-webhook'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -111,6 +112,12 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMoneyfusionWebhookRoute =
+  ApiPublicMoneyfusionWebhookRouteImport.update({
+    id: '/api/public/moneyfusion-webhook',
+    path: '/api/public/moneyfusion-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
   id: '/api/public/ipay-webhook',
   path: '/api/public/ipay-webhook',
@@ -148,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
+  '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -169,6 +177,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
+  '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -191,6 +200,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
+  '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
+    | '/api/public/moneyfusion-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
+    | '/api/public/moneyfusion-webhook'
   id:
     | '__root__'
     | '/'
@@ -256,6 +268,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
+    | '/api/public/moneyfusion-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -278,6 +291,7 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
+  ApiPublicMoneyfusionWebhookRoute: typeof ApiPublicMoneyfusionWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -394,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/moneyfusion-webhook': {
+      id: '/api/public/moneyfusion-webhook'
+      path: '/api/public/moneyfusion-webhook'
+      fullPath: '/api/public/moneyfusion-webhook'
+      preLoaderRoute: typeof ApiPublicMoneyfusionWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ipay-webhook': {
       id: '/api/public/ipay-webhook'
       path: '/api/public/ipay-webhook'
@@ -439,6 +460,7 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
+  ApiPublicMoneyfusionWebhookRoute: ApiPublicMoneyfusionWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
