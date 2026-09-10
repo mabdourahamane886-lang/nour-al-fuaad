@@ -108,6 +108,7 @@ export type Database = {
           msisdn: string
           paid_at: string | null
           programme: string | null
+          provider: string
           raw: Json | null
           reference: string | null
           status: string
@@ -123,6 +124,7 @@ export type Database = {
           msisdn: string
           paid_at?: string | null
           programme?: string | null
+          provider?: string
           raw?: Json | null
           reference?: string | null
           status?: string
@@ -138,6 +140,7 @@ export type Database = {
           msisdn?: string
           paid_at?: string | null
           programme?: string | null
+          provider?: string
           raw?: Json | null
           reference?: string | null
           status?: string
