@@ -108,7 +108,7 @@ function PaiementPage() {
                 onClick={() => choose(plan.amount, plan.programme)}
                 className="block text-center w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold hover:opacity-90 transition"
               >
-                Payer avec iPay Money
+                Payer en ligne
               </button>
             </div>
           ))}
