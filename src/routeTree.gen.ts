@@ -25,6 +25,7 @@ import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as ApiPublicStripeReturnRouteImport } from './routes/api/public/stripe-return'
 import { Route as ApiPublicMoneyfusionWebhookRouteImport } from './routes/api/public/moneyfusion-webhook'
 import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -112,6 +113,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicStripeReturnRoute = ApiPublicStripeReturnRouteImport.update({
+  id: '/api/public/stripe-return',
+  path: '/api/public/stripe-return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicMoneyfusionWebhookRoute =
   ApiPublicMoneyfusionWebhookRouteImport.update({
     id: '/api/public/moneyfusion-webhook',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
   '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
+  '/api/public/stripe-return': typeof ApiPublicStripeReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
   '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
+  '/api/public/stripe-return': typeof ApiPublicStripeReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/ipay-webhook': typeof ApiPublicIpayWebhookRoute
   '/api/public/moneyfusion-webhook': typeof ApiPublicMoneyfusionWebhookRoute
+  '/api/public/stripe-return': typeof ApiPublicStripeReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
     | '/api/public/moneyfusion-webhook'
+    | '/api/public/stripe-return'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
     | '/api/public/moneyfusion-webhook'
+    | '/api/public/stripe-return'
   id:
     | '__root__'
     | '/'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/ipay-webhook'
     | '/api/public/moneyfusion-webhook'
+    | '/api/public/stripe-return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -292,6 +304,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicIpayWebhookRoute: typeof ApiPublicIpayWebhookRoute
   ApiPublicMoneyfusionWebhookRoute: typeof ApiPublicMoneyfusionWebhookRoute
+  ApiPublicStripeReturnRoute: typeof ApiPublicStripeReturnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -408,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/stripe-return': {
+      id: '/api/public/stripe-return'
+      path: '/api/public/stripe-return'
+      fullPath: '/api/public/stripe-return'
+      preLoaderRoute: typeof ApiPublicStripeReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/moneyfusion-webhook': {
       id: '/api/public/moneyfusion-webhook'
       path: '/api/public/moneyfusion-webhook'
@@ -461,6 +481,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicIpayWebhookRoute: ApiPublicIpayWebhookRoute,
   ApiPublicMoneyfusionWebhookRoute: ApiPublicMoneyfusionWebhookRoute,
+  ApiPublicStripeReturnRoute: ApiPublicStripeReturnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

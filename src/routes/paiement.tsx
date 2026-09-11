@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
 import { MoneyFusionForm } from "@/components/MoneyFusionForm";
+import { StripeForm } from "@/components/StripeForm";
 
 import { DepotDirect } from "@/components/DepotDirect";
 import nitaLogo from "@/assets/nita.jpeg.asset.json";
@@ -116,6 +117,10 @@ function PaiementPage() {
 
         <div id="paiement-en-ligne" className="scroll-mt-8">
           <MoneyFusionForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
+        </div>
+
+        <div id="paiement-carte" className="scroll-mt-8">
+          <StripeForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
         </div>
 
         <details id="ipay" className="mb-12 scroll-mt-8 rounded-3xl border border-emerald-200 bg-white p-6">
