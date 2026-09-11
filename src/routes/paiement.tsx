@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { IPayForm } from "@/components/IPayForm";
 import { MoneyFusionForm } from "@/components/MoneyFusionForm";
+import { StripeForm } from "@/components/StripeForm";
 
 import { DepotDirect } from "@/components/DepotDirect";
 import nitaLogo from "@/assets/nita.jpeg.asset.json";
