@@ -119,6 +119,10 @@ function PaiementPage() {
           <MoneyFusionForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
         </div>
 
+        <div id="paiement-carte" className="scroll-mt-8">
+          <StripeForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
+        </div>
+
         <details id="ipay" className="mb-12 scroll-mt-8 rounded-3xl border border-emerald-200 bg-white p-6">
           <summary className="cursor-pointer font-semibold text-emerald-900">
             Autre option : payer avec iPay Money (secours)
