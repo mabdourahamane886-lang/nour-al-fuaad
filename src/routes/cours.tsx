@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, CheckCircle2, Clock3, GraduationCap, ShieldCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, CheckCircle2, Clock3, GraduationCap, ShieldCheck } from "lucide-react";
+import { PriceCard } from "@/components/PriceCard";
 
 export const Route = createFileRoute("/cours")({
   head: () => ({ meta: [
@@ -30,10 +31,7 @@ function CoursPage() {
       <section className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 mb-20">
         {subjects.map((s) => (
           <article key={s.fr} className="group rounded-3xl bg-card border border-border p-7 hover:border-accent hover:-translate-y-1 transition-all shadow-sm hover:shadow-lg">
-            <div className="text-3xl mb-4">{s.icon}</div>
-            <div className="font-arabic text-2xl text-accent mb-2">{s.ar}</div>
-            <h2 className="text-2xl text-primary mb-3">{s.fr}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-5">{s.desc}</p>
+            <div className="text-3xl mb-4">{s.icon}</div><div className="font-arabic text-2xl text-accent mb-2">{s.ar}</div><h2 className="text-2xl text-primary mb-3">{s.fr}</h2><p className="text-sm text-muted-foreground leading-relaxed mb-5">{s.desc}</p>
             <ul className="space-y-2 text-sm mb-6">{s.points.map((p) => <li key={p} className="flex gap-2 items-start"><CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" /><span>{p}</span></li>)}</ul>
             <Link to={s.fr === "Langue arabe" ? "/arabe" : "/inscription"} className="inline-flex items-center gap-2 text-sm font-semibold text-primary">Commencer ce parcours <ArrowRight className="w-4 h-4" /></Link>
           </article>
@@ -46,17 +44,9 @@ function CoursPage() {
         <div className="rounded-3xl p-7 bg-card border border-border"><ShieldCheck className="w-7 h-7 text-accent mb-4" /><h3 className="text-xl text-primary mb-2">Suivi du dossier</h3><p className="text-sm text-muted-foreground">Un code de suivi permet de retrouver votre inscription et son état.</p></div>
       </section>
 
-      <section className="max-w-4xl mx-auto mb-20">
-        <div className="text-center mb-10"><p className="text-xs uppercase tracking-[0.3em] text-accent mb-3">Tarifs actuels</p><h2 className="text-4xl text-primary">Sciences islamiques</h2><p className="text-muted-foreground mt-3">Les montants affichés ci-dessous reprennent les tarifs actuellement présents sur le site.</p></div>
-        <div className="grid sm:grid-cols-2 gap-5">
-          <PriceCard label="Inscription" price="3 000" highlight />
-          <PriceCard label="Mensualité" price="5 000" />
-        </div>
-      </section>
+      <section className="max-w-4xl mx-auto mb-20"><div className="text-center mb-10"><p className="text-xs uppercase tracking-[0.3em] text-accent mb-3">Tarifs actuels</p><h2 className="text-4xl text-primary">Sciences islamiques</h2><p className="text-muted-foreground mt-3">Les montants affichés ci-dessous reprennent les tarifs actuellement présents sur le site.</p></div><div className="grid sm:grid-cols-2 gap-5"><PriceCard label="Inscription" price="3 000" highlight /><PriceCard label="Mensualité" price="5 000" /></div></section>
 
-      <section className="rounded-[2rem] p-10 md:p-14 text-primary-foreground" style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}>
-        <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-center"><div><p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: "var(--gold)" }}>Prochaine étape</p><h2 className="text-4xl md:text-5xl mb-4">Choisir une formation et s'inscrire</h2><p className="text-white/75 max-w-2xl leading-relaxed">Après l'inscription, vous obtenez un code de suivi. Vous pouvez ensuite suivre votre dossier depuis votre espace étudiant.</p></div><Link to="/inscription" className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-primary font-semibold" style={{ background: "var(--gradient-gold)" }}>S'inscrire <ArrowRight className="w-4 h-4" /></Link></div>
-      </section>
+      <section className="rounded-[2rem] p-10 md:p-14 text-primary-foreground" style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}><div className="grid lg:grid-cols-[1fr_auto] gap-8 items-center"><div><p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: "var(--gold)" }}>Prochaine étape</p><h2 className="text-4xl md:text-5xl mb-4">Choisir une formation et s'inscrire</h2><p className="text-white/75 max-w-2xl leading-relaxed">Après l'inscription, vous obtenez un code de suivi. Vous pouvez ensuite suivre votre dossier depuis votre espace étudiant.</p></div><Link to="/inscription" className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-primary font-semibold" style={{ background: "var(--gradient-gold)" }}>S'inscrire <ArrowRight className="w-4 h-4" /></Link></div></section>
     </div>
   );
 }
