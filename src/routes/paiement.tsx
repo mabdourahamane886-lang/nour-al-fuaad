@@ -5,9 +5,6 @@ import { MoneyFusionForm } from "@/components/MoneyFusionForm";
 import { StripeForm } from "@/components/StripeForm";
 
 import { DepotDirect } from "@/components/DepotDirect";
-import nitaLogo from "@/assets/nita.jpeg.asset.json";
-import amanaLogo from "@/assets/amana.jpeg.asset.json";
-import waveLogo from "@/assets/wave.jpeg.asset.json";
 
 export const Route = createFileRoute("/paiement")({
   head: () => ({
@@ -20,9 +17,9 @@ export const Route = createFileRoute("/paiement")({
 });
 
 const methods = [
-  { name: "Wave", logo: waveLogo.url, color: "from-blue-500 to-cyan-500" },
-  { name: "Amanata", logo: amanaLogo.url, color: "from-green-500 to-emerald-600" },
-  { name: "NITA", logo: nitaLogo.url, color: "from-yellow-500 to-amber-600" },
+  { name: "Wave", logo: "/payments/wave.svg", color: "from-blue-500 to-cyan-500" },
+  { name: "Amanata", logo: "/payments/amanata.svg", color: "from-green-500 to-emerald-600" },
+  { name: "NITA", logo: "/payments/nita.svg", color: "from-yellow-500 to-amber-600" },
 ];
 
 const plans = [
@@ -131,7 +128,6 @@ function PaiementPage() {
             <IPayForm presetAmount={selected?.amount} presetProgramme={selected?.programme} />
           </div>
         </details>
-
 
         <div className="bg-gradient-to-r from-emerald-500 to-green-700 rounded-3xl p-8 mb-12 text-center shadow-2xl text-white">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white/20 border border-white/30 mb-3">
