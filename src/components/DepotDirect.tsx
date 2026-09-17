@@ -42,11 +42,11 @@ export function DepotDirect() {
             key={op.name}
             className={`group rounded-3xl border-2 ${op.accent} bg-white p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl md:p-6`}
           >
-            <div className="mb-5 flex h-44 items-center justify-center overflow-hidden rounded-2xl bg-white md:h-48">
+            <div className="mb-5 flex h-40 w-full items-center justify-center overflow-hidden rounded-2xl bg-white md:h-44">
               <img
                 src={op.logo}
                 alt={`Logo ${op.name}`}
-                className="h-full w-full object-contain p-2"
+                className="block h-full w-full object-contain object-center p-1.5"
               />
             </div>
 
