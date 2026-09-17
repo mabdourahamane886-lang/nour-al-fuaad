@@ -2,10 +2,10 @@
   "version": 1,
   "asset_id": "3f680366-6108-481f-9077-fd72d8c0d94b",
   "project_id": "2caeb414-1961-4257-827e-68a94e4dae64",
-  "url": "/__l5e/assets-v1/3f680366-6108-481f-9077-fd72d8c0d94b/amana.jpeg",
-  "r2_key": "a/v1/2caeb414-1961-4257-827e-68a94e4dae64/3f680366-6108-481f-9077-fd72d8c0d94b/amana.jpeg",
+  "url": "/payment-amana.svg",
+  "r2_key": "",
   "original_filename": "amana.jpeg",
-  "size": 35372,
-  "content_type": "image/jpeg",
+  "size": 0,
+  "content_type": "image/svg+xml",
   "created_at": "2026-08-14T09:22:10Z"
 }
