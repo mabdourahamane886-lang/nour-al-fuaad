@@ -14,11 +14,7 @@ Les début 3000f
 
 L'inscription 1500f. 
 
-
-
 Ajoute des versets et hadiths. 
-
-
 
 Les matières à apprendre Mémorisation du coran, hadiths, et fiqhu .
 
@@ -30,9 +26,15 @@ My Nita, Amana ta et wave
 
 Mon numero 227 88376133
 
+## 🌐 Site en production
+
+**Cloudflare:** https://nour-al-fuaad.bickriserviceagency.workers.dev/
+
+**GitHub:** https://github.com/mabdourahamane886-lang/nour-al-fuaad
+
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://nour-al-fuaad.lovable.app
+**Live app Lovable**: https://nour-al-fuaad.lovable.app
 
 ## Build with Lovable
 
