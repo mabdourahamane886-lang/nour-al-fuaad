@@ -1,14 +1,6 @@
-import { defineConfig } from "vite";
-import { fileURLToPath, URL } from "node:url";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import { nitro } from "nitro/vite";
-import viteReact from "@vitejs/plugin-react";
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { lovableMcpTanStack } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
-  plugins: [tanstackStart(), nitro(), viteReact()],
+  plugins: [lovableMcpTanStack()],
 });
