@@ -1,5 +1,6 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import siteLogo from "@/assets/logo.jpeg.asset.json";
+
+const siteLogo = "/favicon.png";
 
 const nav = [
   { to: "/", label: "Accueil" },
@@ -18,7 +19,7 @@ export function SiteLayout() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3 group">
             <img
-              src={siteLogo.url}
+              src={siteLogo}
               alt="Logo NOUROUL FOUA'AD"
               className="w-10 h-10 rounded-full object-cover bg-white"
             />
@@ -66,7 +67,7 @@ export function SiteLayout() {
         <div className="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-3 gap-10 text-primary-foreground">
           <div>
             <img
-              src={siteLogo.url}
+              src={siteLogo}
               alt="Logo NOUROUL FOUA'AD"
               loading="lazy"
               className="w-20 h-20 rounded-2xl object-cover bg-white mb-3"
