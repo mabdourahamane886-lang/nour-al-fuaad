@@ -1,16 +1,13 @@
 import { useState } from "react";
 import qrMyNita from "@/assets/qr-mynita.jpeg.asset.json";
-import nitaLogo from "@/assets/nita.jpeg.asset.json";
-import amanaLogo from "@/assets/amana.jpeg.asset.json";
-import waveLogo from "@/assets/wave.jpeg.asset.json";
 
 const NUMBER = "88376133";
 const NUMBER_DISPLAY = "+227 88 37 61 33";
 
 const operators = [
-  { name: "My Nita", logo: nitaLogo.url, hint: "Dépôt sur compte My Nita" },
-  { name: "Amana ta", logo: amanaLogo.url, hint: "Dépôt sur compte Amana ta" },
-  { name: "Wave", logo: waveLogo.url, hint: "Envoi Wave instantané" },
+  { name: "My Nita", logo: "/payments/nita.svg", hint: "Dépôt sur compte My Nita" },
+  { name: "Amana ta", logo: "/payments/amanata.svg", hint: "Dépôt sur compte Amana ta" },
+  { name: "Wave", logo: "/payments/wave.svg", hint: "Envoi Wave instantané" },
 ];
 
 export function DepotDirect() {
