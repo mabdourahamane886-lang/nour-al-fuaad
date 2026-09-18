@@ -37,7 +37,7 @@ function StudentLoginPage() {
         if (error) {
           const normalized = error.message.toLowerCase();
           if (normalized.includes("email not confirmed") || normalized.includes("email not verified")) {
-            throw new Error("Votre compte est en cours d'activation. Réessayez de vous connecter dans quelques secondes.");
+            throw new Error("La confirmation par email est désactivée pour les nouveaux comptes étudiants. Si ce compte a été créé auparavant, recréez-le avec la même adresse ou faites-le activer depuis Supabase Auth.");
           }
           throw error;
         }
@@ -84,13 +84,15 @@ function StudentLoginPage() {
           </button>
         </div>
 
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} className="space-y-4" autoComplete="on">
           {mode === "signup" && (
             <label className="block">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">Nom complet</span>
               <input
                 required
                 minLength={2}
+                name="name"
+                autoComplete="name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3.5"
@@ -103,6 +105,10 @@ function StudentLoginPage() {
             <input
               required
               type="email"
+              name="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3.5"
@@ -115,10 +121,19 @@ function StudentLoginPage() {
               required
               minLength={8}
               type="password"
+              name="password"
+              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3.5"
             />
+            <span className="mt-2 block text-xs text-muted-foreground">
+              Le mot de passe reste masqué pendant la saisie, y compris sur Android.
+            </span>
           </label>
 
           <button
