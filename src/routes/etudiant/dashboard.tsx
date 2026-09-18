@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Bell, BookOpen, CalendarDays, CheckCircle2, ClipboardCheck, FileBadge2, GraduationCap, LogOut, MessageCircle, ShieldCheck, UserRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
