@@ -190,6 +190,7 @@ export const markStudentNotificationRead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
+    const userId = context.userId;
     const { error } = await context.supabase.from("student_notifications")
       .update({ read_at: new Date().toISOString() })
       .eq("id", data.id)
