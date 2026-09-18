@@ -109,6 +109,7 @@ export const claimStudentInscription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => claimSchema.parse(input))
   .handler(async ({ data, context }) => {
+    const userId = context.userId;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: inscription, error } = await supabaseAdmin.from("inscriptions")
       .select("id, tracking_code, customer_name, whatsapp, programme, status, user_id")
@@ -144,6 +145,7 @@ export const updateStudentProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ full_name: z.string().trim().min(2).max(100), level: z.string().trim().max(80).optional() }).parse(input))
   .handler(async ({ data, context }) => {
+    const userId = context.userId;
     const { error } = await context.supabase.from("student_profiles")
       .upsert({ user_id: userId, full_name: data.full_name, level: data.level || null }, { onConflict: "user_id" });
     if (error) throw new Error(error.message);
@@ -160,31 +162,4 @@ export const markStudentNotificationRead = createServerFn({ method: "POST" })
       .eq("user_id", userId);
     if (error) throw new Error(error.message);
     return { ok: true };
-  });
-
-
-export const createStudentAccount = createServerFn({ method: "POST" })
-  .inputValidator((input) => z.object({
-    email: z.string().trim().email(),
-    password: z.string().min(8),
-    full_name: z.string().trim().min(2).max(100),
-  }).parse(input))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email,
-      password: data.password,
-      email_confirm: true,
-      user_metadata: { full_name: data.full_name },
-    });
-
-    if (error) {
-      const message = error.message.toLowerCase();
-      if (message.includes("already") || message.includes("registered")) {
-        throw new Error("Ce compte existe déjà. Utilisez l'onglet « Se connecter ».");
-      }
-      throw new Error(error.message);
-    }
-
-    return { userId: created.user?.id ?? null, email: created.user?.email ?? data.email };
   });
