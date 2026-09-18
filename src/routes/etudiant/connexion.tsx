@@ -13,9 +13,6 @@ export const Route = createFileRoute("/etudiant/connexion")({
   component: StudentLoginPage,
 });
 
-const getConfirmationRedirectUrl = () =>
-  `${window.location.origin}/etudiant/connexion`;
-
 function StudentLoginPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -23,47 +20,14 @@ function StudentLoginPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [needsEmailConfirmation, setNeedsEmailConfirmation] = useState(false);
-
-  const resendConfirmation = async () => {
-    if (!email) {
-      setError("Saisissez votre adresse e-mail pour recevoir le lien de confirmation.");
-      return;
-    }
-
-    setResending(true);
-    setError(null);
-    setMessage(null);
-
-    try {
-      const { error } = await supabase.auth.resend({
-        type: "signup",
-        email,
-        options: {
-          emailRedirectTo: getConfirmationRedirectUrl(),
-        },
-      });
-
-      if (error) throw error;
-
-      setMessage("Un nouveau lien de confirmation vient d’être envoyé. Vérifiez votre boîte de réception et vos spams.");
-      setNeedsEmailConfirmation(false);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setResending(false);
-    }
-  };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
     setMessage(null);
-    setNeedsEmailConfirmation(false);
 
     try {
       if (mode === "signin") {
@@ -72,9 +36,7 @@ function StudentLoginPage() {
         if (error) {
           const normalized = error.message.toLowerCase();
           if (normalized.includes("email not confirmed") || normalized.includes("email not verified")) {
-            setNeedsEmailConfirmation(true);
-            setError("Votre adresse e-mail n’est pas encore confirmée. Vérifiez votre boîte de réception ou renvoyez le lien de confirmation.");
-            return;
+            throw new Error("La validation par e-mail est encore activée dans Supabase. Désactivez « Confirm email » dans Authentication → Providers → Email pour permettre la connexion immédiate.");
           }
           throw error;
         }
@@ -86,7 +48,6 @@ function StudentLoginPage() {
           password,
           options: {
             data: { full_name: fullName },
-            emailRedirectTo: getConfirmationRedirectUrl(),
           },
         });
 
@@ -94,10 +55,11 @@ function StudentLoginPage() {
 
         if (data.session) {
           navigate({ to: "/etudiant/dashboard" });
-        } else {
-          setMessage("Compte créé. Un e-mail de confirmation vous a été envoyé. Confirmez votre adresse avant de vous connecter.");
-          setMode("signin");
+          return;
         }
+
+        setMessage("Compte créé. Connectez-vous pour ouvrir immédiatement votre espace étudiant.");
+        setMode("signin");
       }
     } catch (err) {
       setError((err as Error).message);
@@ -178,17 +140,6 @@ function StudentLoginPage() {
           </button>
         </form>
 
-        {needsEmailConfirmation && (
-          <button
-            type="button"
-            onClick={resendConfirmation}
-            disabled={resending}
-            className="mt-4 w-full rounded-2xl border border-accent px-4 py-3 text-sm font-semibold text-accent disabled:opacity-60"
-          >
-            {resending ? "Envoi en cours…" : "Renvoyer l’e-mail de confirmation"}
-          </button>
-        )}
-
         {error && (
           <div className="mt-4 rounded-2xl border border-red-300 bg-red-50 p-3 text-sm text-red-700">
             {error}
@@ -202,7 +153,7 @@ function StudentLoginPage() {
         )}
 
         <div className="mt-6 rounded-2xl bg-muted/40 p-4 text-sm text-muted-foreground">
-          Après avoir confirmé votre e-mail et vous être connecté, utilisez votre code de suivi et les 4 derniers chiffres de votre WhatsApp pour lier votre dossier étudiant.
+          L’inscription crée directement votre compte. Une fois connecté, utilisez votre code de suivi et les 4 derniers chiffres de votre WhatsApp pour lier votre dossier étudiant.
         </div>
       </div>
     </main>
