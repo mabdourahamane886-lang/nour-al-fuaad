@@ -1,0 +1,121 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Bell, BookOpen, CalendarDays, CheckCircle2, ClipboardCheck, FileBadge2, GraduationCap, LogOut, MessageCircle, ShieldCheck, UserRound } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
+import { claimStudentInscription, getStudentDashboard, markStudentNotificationRead, updateStudentProfile } from "@/lib/student.functions";
+
+export const Route = createFileRoute("/etudiant/dashboard")({
+  head: () => ({ meta: [
+    { title: "Tableau de bord étudiant — NOUROUL FOUA'AD" },
+    { name: "description", content: "Votre parcours, vos cours, vos progrès, vos évaluations et vos ressources Nouroul Foua'ad." },
+    { name: "robots", content: "noindex" },
+  ]}),
+  component: StudentDashboardPage,
+});
+
+function StudentDashboardPage() {
+  const navigate = useNavigate();
+  const fetchDashboard = useServerFn(getStudentDashboard);
+  const claim = useServerFn(claimStudentInscription);
+  const markRead = useServerFn(markStudentNotificationRead);
+  const saveProfile = useServerFn(updateStudentProfile);
+  const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [claimCode, setClaimCode] = useState("");
+  const [claimPhone, setClaimPhone] = useState("");
+  const [claimError, setClaimError] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState("");
+  const [profileLevel, setProfileLevel] = useState("");
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const result = await fetchDashboard({ data: undefined });
+      setData(result); setProfileName(result.profile?.full_name ?? ""); setProfileLevel(result.profile?.level ?? "");
+    } catch (e) { setClaimError((e as Error).message); }
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) navigate({ to: "/etudiant/connexion" });
+      else load();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const progressAverage = useMemo(() => {
+    const rows = data?.progress ?? [];
+    return rows.length ? Math.round(rows.reduce((sum: number, r: any) => sum + Number(r.progress ?? 0), 0) / rows.length) : 0;
+  }, [data]);
+  const attendanceStats = useMemo(() => {
+    const rows = data?.attendance ?? [];
+    return { attended: rows.filter((r: any) => ["present","late"].includes(r.status)).length, total: rows.length };
+  }, [data]);
+  const unread = (data?.notifications ?? []).filter((n: any) => !n.read_at);
+
+  const doClaim = async () => {
+    setClaimError(null);
+    try { await claim({ data: { tracking_code: claimCode, phone_last4: claimPhone } }); setClaimCode(""); setClaimPhone(""); await load(); }
+    catch (e) { setClaimError((e as Error).message); }
+  };
+  const save = async () => {
+    try { await saveProfile({ data: { full_name: profileName, level: profileLevel } }); await load(); }
+    catch (e) { setClaimError((e as Error).message); }
+  };
+  const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/etudiant/connexion" }); };
+
+  if (loading) return <main className="max-w-7xl mx-auto px-6 py-20 text-center text-muted-foreground">Chargement de votre espace…</main>;
+  if (!data) return null;
+
+  return <main className="max-w-7xl mx-auto px-6 py-12 md:py-16 space-y-8">
+    <section className="rounded-3xl p-7 md:p-10 text-primary-foreground" style={{ background: "var(--gradient-hero)", boxShadow: "var(--shadow-elegant)" }}>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div><p className="text-xs uppercase tracking-[0.25em] opacity-75">Tableau de bord étudiant</p><h1 className="text-4xl md:text-5xl mt-2" style={{ fontFamily: "var(--font-display)" }}>Bienvenue {data.profile?.full_name || "dans votre parcours"} 👋</h1><p className="mt-3 opacity-80 max-w-2xl">Un seul espace pour vos cours, votre progression, vos évaluations, votre assiduité et vos ressources.</p></div>
+        <div className="flex flex-wrap gap-3"><Link to="/mon-espace" className="px-5 py-3 rounded-full border border-white/20 bg-white/10">Suivi du dossier</Link><button onClick={signOut} className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-primary font-semibold"><LogOut className="w-4 h-4" /> Déconnexion</button></div>
+      </div>
+    </section>
+
+    {!data.inscription && <section className="rounded-3xl border border-border bg-card p-7 md:p-9">
+      <div className="flex items-center gap-3 mb-6"><ClipboardCheck className="w-6 h-6 text-accent" /><div><h2 className="text-2xl text-primary">Lier mon dossier</h2><p className="text-sm text-muted-foreground">Associez le compte à votre inscription existante.</p></div></div>
+      <div className="grid md:grid-cols-[1fr_220px_auto] gap-3"><input value={claimCode} onChange={(e) => setClaimCode(e.target.value.toUpperCase())} placeholder="INS-XXXX-XXXX" className="rounded-2xl border border-input bg-background px-4 py-3.5" /><input value={claimPhone} onChange={(e) => setClaimPhone(e.target.value.replace(/\D/g,"").slice(-4))} placeholder="4 derniers chiffres WhatsApp" inputMode="numeric" className="rounded-2xl border border-input bg-background px-4 py-3.5" /><button onClick={doClaim} className="rounded-2xl px-6 py-3.5 font-semibold text-white" style={{ background: "var(--gradient-hero)" }}>Lier mon dossier</button></div>
+      {claimError && <p className="mt-3 text-sm text-red-600">{claimError}</p>}
+    </section>}
+
+    <section className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <Metric icon={<GraduationCap className="w-5 h-5" />} label="Progression" value={`${progressAverage}%`} />
+      <Metric icon={<CalendarDays className="w-5 h-5" />} label="Présence" value={attendanceStats.total ? `${attendanceStats.attended}/${attendanceStats.total}` : "—"} />
+      <Metric icon={<ShieldCheck className="w-5 h-5" />} label="Évaluations" value={String(data.assessments?.length ?? 0)} />
+      <Metric icon={<Bell className="w-5 h-5" />} label="Notifications" value={String(unread.length)} />
+    </section>
+
+    <section className="grid xl:grid-cols-[1.3fr_0.7fr] gap-6">
+      <div className="rounded-3xl border border-border bg-card p-7"><div className="flex items-center justify-between mb-6"><div><p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Parcours</p><h2 className="text-2xl text-primary">Mes formations</h2></div><BookOpen className="w-6 h-6 text-accent" /></div>
+        {data.enrollments?.length ? <div className="grid md:grid-cols-2 gap-4">{data.enrollments.map((e:any)=>{const p=data.progress?.find((row:any)=>row.course_id===e.course_id);return <div key={e.id} className="rounded-2xl border border-border p-5"><p className="font-semibold text-primary">{e.student_courses?.title ?? "Formation"}</p><p className="text-xs text-muted-foreground mt-1">{e.student_courses?.subject ?? ""} · {e.status}</p>{p&&<ProgressBar value={Number(p.progress??0)}/>}<p className="text-sm text-muted-foreground mt-3">{e.student_courses?.description ?? ""}</p></div>})}</div> : <Empty text="Votre parcours apparaîtra ici dès que votre dossier sera lié et votre accès ouvert." />}
+      </div>
+      <div className="rounded-3xl border border-border bg-card p-7"><p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Calendrier</p><h2 className="text-2xl text-primary mb-5">Prochaines séances</h2><div className="space-y-3">{[["Lundi","15h30"],["Mercredi","15h30"],["Vendredi","15h30"]].map(([day,time])=><div key={day} className="flex items-center justify-between rounded-2xl border border-border px-4 py-3"><span className="font-medium">{day}</span><span className="text-accent font-semibold">{time}</span></div>)}</div><p className="text-xs text-muted-foreground mt-4">Les horaires peuvent être adaptés selon le groupe.</p></div>
+    </section>
+
+    <section className="grid xl:grid-cols-2 gap-6">
+      <Panel title="Mémorisation du Coran" icon={<BookOpen className="w-5 h-5" />}>{data.quranProgress?.length ? data.quranProgress.slice(0,8).map((q:any)=><div key={q.id} className="py-3 border-b border-border last:border-0"><div className="flex justify-between gap-4"><span className="font-medium">{q.surah_number}. {q.surah_name}</span><span className="text-xs text-muted-foreground">{q.memorization_percent}% mémorisation</span></div><ProgressBar value={Number(q.memorization_percent)}/><p className="text-xs text-muted-foreground mt-1">Révision : {q.revision_percent}%</p></div>) : <Empty text="Les sourates suivies par votre enseignant apparaîtront ici." />}</Panel>
+      <Panel title="Évaluations récentes" icon={<CheckCircle2 className="w-5 h-5" />}>{data.assessments?.length ? data.assessments.map((a:any)=><div key={a.id} className="flex items-center justify-between gap-4 py-3 border-b border-border last:border-0"><div><p className="font-medium">{a.title}</p><p className="text-xs text-muted-foreground">{a.subject} · {new Date(a.assessed_at).toLocaleDateString("fr-FR")}</p></div><span className="text-lg font-semibold text-accent">{a.score}/{a.max_score}</span></div>) : <Empty text="Vos notes et évaluations apparaîtront ici." />}</Panel>
+      <Panel title="Présence" icon={<CalendarDays className="w-5 h-5" />}>{data.attendance?.length ? data.attendance.slice(0,8).map((a:any)=><div key={a.id} className="flex items-center justify-between py-3 border-b border-border last:border-0"><span>{new Date(a.session_date).toLocaleDateString("fr-FR")}</span><span className="text-xs px-2 py-1 rounded-full bg-muted">{labelAttendance(a.status)}</span></div>) : <Empty text="L'historique de présence sera renseigné par l'équipe pédagogique." />}</Panel>
+      <Panel title="Ressources" icon={<FileBadge2 className="w-5 h-5" />}>{data.resources?.length ? data.resources.map((r:any)=><a key={r.id} href={r.url} target="_blank" rel="noopener noreferrer" className="block py-3 border-b border-border last:border-0 hover:text-accent"><p className="font-medium">{r.title}</p><p className="text-xs text-muted-foreground">{r.resource_type} · {r.description}</p></a>) : <Empty text="Les PDF, audios, vidéos et exercices seront ajoutés ici." />}</Panel>
+    </section>
+
+    <section className="grid xl:grid-cols-2 gap-6">
+      <Panel title="Notifications" icon={<Bell className="w-5 h-5" />}>{data.notifications?.length ? data.notifications.map((n:any)=><div key={n.id} className="py-3 border-b border-border last:border-0"><div className="flex items-start justify-between gap-4"><div><p className="font-medium">{n.title}</p><p className="text-sm text-muted-foreground mt-1">{n.message}</p></div>{!n.read_at&&<button onClick={async()=>{await markRead({data:{id:n.id}});await load();}} className="text-xs text-accent font-semibold">Lu</button>}</div></div>) : <Empty text="Vous n'avez pas encore de notification." />}</Panel>
+      <Panel title="Mon dossier & certificats" icon={<FileBadge2 className="w-5 h-5" />}>{data.inscription?<div className="space-y-3 text-sm"><div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono">{data.inscription.tracking_code}</span></div><div className="flex justify-between"><span className="text-muted-foreground">Programme</span><span>{data.inscription.programme}</span></div><div className="flex justify-between"><span className="text-muted-foreground">Statut</span><span className="text-accent font-semibold">{data.inscription.status}</span></div><div className="flex gap-3 pt-2"><Link to="/mon-espace" className="rounded-full border border-border px-4 py-2">Certificat / suivi</Link><Link to="/paiement" className="rounded-full border border-border px-4 py-2">Paiement</Link></div></div>:<Empty text="Liez votre dossier pour afficher vos informations d'inscription." />}</Panel>
+    </section>
+
+    <section className="rounded-3xl border border-border bg-card p-7"><div className="flex items-center gap-3 mb-5"><UserRound className="w-5 h-5 text-accent" /><div><p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Profil</p><h2 className="text-2xl text-primary">Mes informations</h2></div></div><div className="grid md:grid-cols-[1fr_240px_auto] gap-3"><input value={profileName} onChange={(e)=>setProfileName(e.target.value)} className="rounded-2xl border border-input bg-background px-4 py-3.5" placeholder="Nom complet" /><input value={profileLevel} onChange={(e)=>setProfileLevel(e.target.value)} className="rounded-2xl border border-input bg-background px-4 py-3.5" placeholder="Niveau" /><button onClick={save} className="rounded-2xl px-6 py-3.5 font-semibold text-white" style={{background:"var(--gradient-hero)"}}>Enregistrer</button></div></section>
+    <div className="flex flex-wrap justify-center gap-3 pb-6"><a href="https://wa.me/22788376133" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3"><MessageCircle className="w-4 h-4" /> Assistance WhatsApp</a><Link to="/cours" className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3">Catalogue des formations</Link></div>
+  </main>;
+}
+
+function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="rounded-3xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-accent">{icon}<span className="text-xs uppercase tracking-wider text-muted-foreground">{label}</span></div><p className="text-3xl text-primary mt-3">{value}</p></div>; }
+function ProgressBar({ value }: { value: number }) { return <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden"><div className="h-full rounded-full" style={{width:`${Math.max(0,Math.min(100,value))}%`,background:"var(--gradient-gold)"}} /></div>; }
+function Panel({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) { return <section className="rounded-3xl border border-border bg-card p-7"><div className="flex items-center gap-3 mb-4">{icon}<h2 className="text-xl text-primary">{title}</h2></div>{children}</section>; }
+function Empty({ text }: { text: string }) { return <div className="rounded-2xl bg-muted/40 p-5 text-sm text-muted-foreground">{text}</div>; }
+function labelAttendance(status: string) { return ({present:"Présent",late:"En retard",absent:"Absent",excused:"Justifié"} as Record<string,string>)[status] ?? status; }
