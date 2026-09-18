@@ -103,6 +103,13 @@ CREATE TABLE IF NOT EXISTS public.student_resources (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+GRANT SELECT ON public.inscriptions TO authenticated;
+
+DROP POLICY IF EXISTS "Students read own inscription" ON public.inscriptions;
+CREATE POLICY "Students read own inscription" ON public.inscriptions
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
+
 GRANT SELECT, INSERT, UPDATE ON public.student_profiles TO authenticated;
 GRANT SELECT ON public.student_courses TO authenticated;
 GRANT SELECT ON public.student_enrollments TO authenticated;

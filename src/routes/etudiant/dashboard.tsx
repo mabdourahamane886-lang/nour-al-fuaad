@@ -34,7 +34,11 @@ function StudentDashboardPage() {
     setLoading(true);
     setLoadError(null);
     try {
-      const result = await fetchDashboard({ data: undefined });
+      const result = await withTimeout(
+        fetchDashboard({ data: undefined }),
+        12000,
+        "Le chargement du tableau de bord dépasse 12 secondes."
+      );
       setData(result);
       setProfileName(result.profile?.full_name ?? "");
       setProfileLevel(result.profile?.level ?? "");
@@ -50,7 +54,11 @@ function StudentDashboardPage() {
     let active = true;
 
     const initialize = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData } = await withTimeout(
+        supabase.auth.getSession(),
+        8000,
+        "La vérification de votre session a expiré."
+      );
       if (!active) return;
 
       if (!sessionData.session) {
@@ -64,7 +72,9 @@ function StudentDashboardPage() {
     initialize();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (active && session && !data) void load();
+      if (!active) return;
+      if (session) void load();
+      else navigate({ to: "/etudiant/connexion", replace: true });
     });
 
     return () => {
@@ -95,7 +105,21 @@ function StudentDashboardPage() {
   };
   const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/etudiant/connexion" }); };
 
-  if (loading) return <main className="max-w-7xl mx-auto px-6 py-20 text-center text-muted-foreground">Chargement de votre espace…</main>;
+  if (loading) return (
+    <main className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+      <section className="rounded-3xl border border-border bg-card p-7 md:p-10">
+        <div className="animate-pulse space-y-5">
+          <div className="h-4 w-40 rounded bg-muted" />
+          <div className="h-10 w-3/4 rounded bg-muted" />
+          <div className="h-4 w-full max-w-2xl rounded bg-muted" />
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 pt-4">
+            {[1, 2, 3, 4].map((item) => <div key={item} className="h-28 rounded-3xl bg-muted/70" />)}
+          </div>
+        </div>
+        <p className="mt-6 text-center text-sm text-muted-foreground">Chargement sécurisé de votre espace étudiant…</p>
+      </section>
+    </main>
+  );
   if (loadError) return (
     <main className="min-h-[60vh] flex items-center justify-center px-6 py-16">
       <section className="w-full max-w-xl rounded-3xl border border-border bg-card p-8 text-center">
@@ -161,3 +185,19 @@ function ProgressBar({ value }: { value: number }) { return <div className="mt-2
 function Panel({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) { return <section className="rounded-3xl border border-border bg-card p-7"><div className="flex items-center gap-3 mb-4">{icon}<h2 className="text-xl text-primary">{title}</h2></div>{children}</section>; }
 function Empty({ text }: { text: string }) { return <div className="rounded-2xl bg-muted/40 p-5 text-sm text-muted-foreground">{text}</div>; }
 function labelAttendance(status: string) { return ({present:"Présent",late:"En retard",absent:"Absent",excused:"Justifié"} as Record<string,string>)[status] ?? status; }
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string) {
+  return new Promise<T>((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise.then(
+      (value) => {
+        window.clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
