@@ -23,6 +23,40 @@ const programmeToSlugs: Record<string, string[]> = {
 
 const normalizeProgramme = (value: string | null | undefined) => (value ?? "").trim().toLowerCase();
 
+export const createStudentAccount = createServerFn({ method: "POST" })
+  .inputValidator((input) => z.object({
+    email: z.string().trim().email(),
+    password: z.string().min(8),
+    full_name: z.string().trim().min(2).max(100),
+  }).parse(input))
+  .handler(async ({ data }) => {
+    // La clé secrète Supabase reste uniquement côté serveur.
+    // Les comptes étudiants sont confirmés automatiquement : aucun email de validation n'est requis.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { full_name: data.full_name },
+    });
+
+    if (error) {
+      if (error.message.toLowerCase().includes("already registered")) {
+        throw new Error("Un compte existe déjà avec cet email. Connectez-vous avec votre mot de passe ou utilisez un autre email.");
+      }
+      throw new Error(error.message);
+    }
+
+    if (!created.user) throw new Error("Le compte étudiant n'a pas pu être créé.");
+
+    await supabaseAdmin.from("student_profiles").upsert({
+      user_id: created.user.id,
+      full_name: data.full_name,
+    }, { onConflict: "user_id" });
+
+    return { ok: true };
+  });
+
 export const getStudentDashboard = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ access_token: z.string().min(20) }).parse(input))
   .handler(async ({ data }) => {
