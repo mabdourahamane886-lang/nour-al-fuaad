@@ -3,6 +3,7 @@ import { Award, BookOpen, CheckCircle2, ClipboardCheck, CreditCard, MessageCircl
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getInscriptionStatus } from "@/lib/inscriptions.functions";
+import { verifyLicense } from "@/lib/licenses.functions";
 
 export const Route = createFileRoute("/mon-espace")({
   head: () => ({ meta: [
@@ -22,6 +23,7 @@ const STEPS = [
 
 function MonEspacePage() {
   const fetchStatus = useServerFn(getInscriptionStatus);
+  const verifyCertificateFn = useServerFn(verifyLicense);
   const [query, setQuery] = useState("");
   const [data, setData] = useState<Inscription | null>(null);
   const [searched, setSearched] = useState(false);
@@ -48,17 +50,29 @@ function MonEspacePage() {
 
   const currentIndex = data ? Math.max(0, STEPS.findIndex((s) => s.key === data.status)) : -1;
 
-  const verifyCertificate = () => {
+  const verifyCertificate = async () => {
     const value = certificateCode.trim().toUpperCase();
     if (!value) { setCertificateMessage("Saisissez le code figurant sur votre certificat."); return; }
-    setCertificateMessage(/^NF-[A-Z0-9-]{6,30}$/.test(value)
-      ? "Code reconnu au format certificat. La vérification définitive dépendra de l'enregistrement du certificat dans la base de l'académie."
-      : "Format de code invalide. Exemple : NF-2026-000145.");
+    try {
+      const result = await verifyCertificateFn({ data: { code: value } });
+      setCertificateMessage(result.valid
+        ? `✅ Certificat authentique — ${result.license?.customer_name ?? ""} · ${result.license?.programme ?? "Formation"}.`
+        : "❌ Aucun certificat actif ne correspond à ce code.");
+    } catch {
+      setCertificateMessage("Impossible de vérifier le certificat pour le moment.");
+    }
   };
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
       <header className="text-center max-w-3xl mx-auto mb-12"><p className="text-xs uppercase tracking-[0.3em] text-accent mb-3">Espace étudiant</p><h1 className="text-5xl md:text-6xl text-primary mb-4">Mon parcours</h1><p className="text-muted-foreground text-lg leading-relaxed">Retrouvez votre inscription, son statut, les prochaines étapes et les actions utiles au même endroit.</p></header>
+
+      <section className="max-w-4xl mx-auto mb-10 rounded-3xl border border-accent/20 bg-accent/5 p-6 md:p-7">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div><p className="text-xs uppercase tracking-[0.2em] text-accent">Nouveau</p><h2 className="text-2xl text-primary">Votre espace d’apprentissage complet</h2><p className="text-sm text-muted-foreground mt-1">Cours privés, progression, mémorisation du Coran, évaluations, présence et ressources.</p></div>
+          <Link to="/etudiant/connexion" className="inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold" style={{ background: "var(--gradient-hero)" }}>Ouvrir mon espace étudiant</Link>
+        </div>
+      </section>
 
       <section className="max-w-4xl mx-auto mb-10"><form onSubmit={(e) => { e.preventDefault(); lookup(query); }} className="rounded-3xl bg-card border border-border p-4 md:p-5 shadow-sm"><div className="flex flex-col md:flex-row gap-3"><div className="relative flex-1"><ClipboardCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-accent" /><input value={query} onChange={(e) => setQuery(e.target.value)} maxLength={40} placeholder="Code INS-XXXX-XXXX ou numéro WhatsApp" className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-background border border-input outline-none focus:ring-2 focus:ring-accent/25" /></div><button type="submit" disabled={loading} className="px-7 py-3.5 rounded-2xl font-semibold text-primary-foreground disabled:opacity-60" style={{ background: "var(--gradient-hero)" }}>{loading ? "Recherche…" : "Voir mon dossier"}</button></div><p className="text-xs text-muted-foreground mt-3">Votre code de suivi est fourni après l'inscription.</p></form></section>
 
