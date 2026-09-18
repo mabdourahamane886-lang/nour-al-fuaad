@@ -37,7 +37,7 @@ function StudentLoginPage() {
         if (error) {
           const normalized = error.message.toLowerCase();
           if (normalized.includes("email not confirmed") || normalized.includes("email not verified")) {
-            throw new Error("Votre e-mail n'est pas encore confirmé. Vérifiez votre boîte de réception (et vos spams) puis cliquez sur le lien de confirmation, ou réessayez dans quelques minutes.");
+            throw new Error("Votre compte est en cours d'activation. Réessayez de vous connecter dans quelques secondes.");
           }
           throw error;
         }
