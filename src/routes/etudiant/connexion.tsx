@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { createStudentAccount } from "@/lib/student.functions";
 
 export const Route = createFileRoute("/etudiant/connexion")({
   head: () => ({
@@ -43,23 +44,12 @@ function StudentLoginPage() {
 
         navigate({ to: "/etudiant/dashboard" });
       } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: fullName },
-          },
-        });
+        await createStudentAccount({ data: { email, password, full_name: fullName } });
 
-        if (error) throw error;
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
 
-        if (data.session) {
-          navigate({ to: "/etudiant/dashboard" });
-          return;
-        }
-
-        setMessage("Compte créé. Connectez-vous pour ouvrir immédiatement votre espace étudiant.");
-        setMode("signin");
+        navigate({ to: "/etudiant/dashboard" });
       }
     } catch (err) {
       setError((err as Error).message);
