@@ -23,6 +23,7 @@ function StudentDashboardPage() {
   const saveProfile = useServerFn(updateStudentProfile);
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [claimCode, setClaimCode] = useState("");
   const [claimPhone, setClaimPhone] = useState("");
   const [claimError, setClaimError] = useState<string | null>(null);
@@ -31,18 +32,45 @@ function StudentDashboardPage() {
 
   const load = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const result = await fetchDashboard({ data: undefined });
-      setData(result); setProfileName(result.profile?.full_name ?? ""); setProfileLevel(result.profile?.level ?? "");
-    } catch (e) { setClaimError((e as Error).message); }
-    finally { setLoading(false); }
+      setData(result);
+      setProfileName(result.profile?.full_name ?? "");
+      setProfileLevel(result.profile?.level ?? "");
+    } catch (e) {
+      console.error("[StudentDashboard] load failed", e);
+      setLoadError("Votre connexion est active, mais les données du tableau de bord n'ont pas pu être chargées.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) navigate({ to: "/etudiant/connexion" });
-      else load();
+    let active = true;
+
+    const initialize = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!active) return;
+
+      if (!sessionData.session) {
+        navigate({ to: "/etudiant/connexion", replace: true });
+        return;
+      }
+
+      await load();
+    };
+
+    initialize();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (active && session && !data) void load();
     });
+
+    return () => {
+      active = false;
+      authListener.subscription.unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -68,6 +96,19 @@ function StudentDashboardPage() {
   const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/etudiant/connexion" }); };
 
   if (loading) return <main className="max-w-7xl mx-auto px-6 py-20 text-center text-muted-foreground">Chargement de votre espace…</main>;
+  if (loadError) return (
+    <main className="min-h-[60vh] flex items-center justify-center px-6 py-16">
+      <section className="w-full max-w-xl rounded-3xl border border-border bg-card p-8 text-center">
+        <p className="text-xs uppercase tracking-[0.2em] text-accent">Espace étudiant</p>
+        <h1 className="mt-3 text-2xl font-semibold text-primary">Votre connexion est bien active</h1>
+        <p className="mt-3 text-sm text-muted-foreground">{loadError}</p>
+        <div className="mt-6 flex justify-center gap-3">
+          <button onClick={() => void load()} className="rounded-full px-5 py-3 font-semibold text-white" style={{background:"var(--gradient-hero)"}}>Réessayer</button>
+          <button onClick={signOut} className="rounded-full border border-border px-5 py-3">Se déconnecter</button>
+        </div>
+      </section>
+    </main>
+  );
   if (!data) return null;
 
   return <main className="max-w-7xl mx-auto px-6 py-12 md:py-16 space-y-8">
