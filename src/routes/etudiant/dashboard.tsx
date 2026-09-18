@@ -36,7 +36,10 @@ function StudentDashboardPage() {
     setLoadError(null);
     try {
       const result = await withTimeout(
-        supabase.auth.getSession().then(({ data: sessionData }) => {\n          if (!sessionData.session?.access_token) throw new Error("Session étudiant introuvable.");\n          return fetchDashboard({ data: { access_token: sessionData.session.access_token } });\n        }),
+        supabase.auth.getSession().then(({ data: sessionData }) => {
+          if (!sessionData.session?.access_token) throw new Error("Session étudiant introuvable.");
+          return fetchDashboard({ data: { access_token: sessionData.session.access_token } });
+        }),
         12000,
         "Le chargement du tableau de bord dépasse 12 secondes."
       );
