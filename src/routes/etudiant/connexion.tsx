@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { createStudentAccount } from "@/lib/student.functions";
 
 export const Route = createFileRoute("/etudiant/connexion")({
   head: () => ({
@@ -23,6 +22,36 @@ function StudentLoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  const resendConfirmation = async () => {
+    if (!email) {
+      setError("Saisissez votre adresse email.");
+      return;
+    }
+
+    setResending(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: {
+          emailRedirectTo: window.location.origin + "/etudiant/dashboard",
+        },
+      });
+
+      if (resendError) throw resendError;
+      setMessage("Un nouvel email de confirmation vient d'être envoyé. Vérifiez également vos spams.");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setResending(false);
+    }
+  };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,19 +66,36 @@ function StudentLoginPage() {
         if (error) {
           const normalized = error.message.toLowerCase();
           if (normalized.includes("email not confirmed") || normalized.includes("email not verified")) {
-            throw new Error("La confirmation par email est désactivée pour les nouveaux comptes étudiants. Si ce compte a été créé auparavant, recréez-le avec la même adresse ou faites-le activer depuis Supabase Auth.");
+            setNeedsConfirmation(true);
+            throw new Error("Votre adresse email n'est pas encore confirmée. Ouvrez l'email envoyé par Nour-al-fuaad, puis revenez vous connecter.");
           }
           throw error;
         }
 
+        setNeedsConfirmation(false);
         navigate({ to: "/etudiant/dashboard" });
       } else {
-        await createStudentAccount({ data: { email, password, full_name: fullName } });
+        const redirectTo = window.location.origin + "/etudiant/dashboard";
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: redirectTo,
+          },
+        });
 
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        if (signUpError) throw signUpError;
 
-        navigate({ to: "/etudiant/dashboard" });
+        if (data.session) {
+          navigate({ to: "/etudiant/dashboard" });
+          return;
+        }
+
+        setNeedsConfirmation(true);
+        setMessage("Compte créé. Vérifiez votre boîte email et cliquez sur le lien de confirmation pour activer votre compte. Après confirmation, revenez ici et connectez-vous.");
+        setPassword("");
+        setMode("signin");
       }
     } catch (err) {
       setError((err as Error).message);
@@ -155,6 +201,17 @@ function StudentLoginPage() {
           <div className="mt-4 rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-700">
             {message}
           </div>
+        )}
+
+        {needsConfirmation && (
+          <button
+            type="button"
+            onClick={() => void resendConfirmation()}
+            disabled={resending}
+            className="mt-3 w-full rounded-2xl border border-accent px-4 py-3 text-sm font-semibold text-accent disabled:opacity-60"
+          >
+            {resending ? "Envoi en cours…" : "Renvoyer l'email de confirmation"}
+          </button>
         )}
 
         <div className="mt-6 rounded-2xl bg-muted/40 p-4 text-sm text-muted-foreground">
