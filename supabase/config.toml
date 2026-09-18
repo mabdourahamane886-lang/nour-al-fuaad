@@ -3,4 +3,4 @@ project_id = "dvjkvwfbsaokeoolgvfu"
 # Local/self-hosted Auth configuration.
 # Hosted Supabase projects use the Auth Providers dashboard instead.
 [auth.email]
-enable_confirmations = true
+enable_confirmations = false
