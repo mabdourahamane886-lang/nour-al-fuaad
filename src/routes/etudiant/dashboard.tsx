@@ -29,6 +29,7 @@ function StudentDashboardPage() {
   const [claimError, setClaimError] = useState<string | null>(null);
   const [profileName, setProfileName] = useState("");
   const [profileLevel, setProfileLevel] = useState("");
+  const [offlineMode, setOfflineMode] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -54,19 +55,34 @@ function StudentDashboardPage() {
     let active = true;
 
     const initialize = async () => {
-      const { data: sessionData } = await withTimeout(
-        supabase.auth.getSession(),
-        8000,
-        "La vérification de votre session a expiré."
-      );
-      if (!active) return;
+      try {
+        const { data: sessionData } = await withTimeout(
+          supabase.auth.getSession(),
+          8000,
+          "La vérification de votre session a expiré."
+        );
+        if (!active) return;
 
-      if (!sessionData.session) {
-        navigate({ to: "/etudiant/connexion", replace: true });
-        return;
+        if (!sessionData.session) {
+          const local = getLocalDashboardData();
+          setOfflineMode(true);
+          setData(local);
+          setProfileName(local.profile.full_name ?? "");
+          setProfileLevel(local.profile.level ?? "");
+          setLoading(false);
+          return;
+        }
+
+        await load();
+      } catch {
+        if (!active) return;
+        const local = getLocalDashboardData();
+        setOfflineMode(true);
+        setData(local);
+        setProfileName(local.profile.full_name ?? "");
+        setProfileLevel(local.profile.level ?? "");
+        setLoading(false);
       }
-
-      await load();
     };
 
     initialize();
@@ -96,14 +112,28 @@ function StudentDashboardPage() {
 
   const doClaim = async () => {
     setClaimError(null);
+    if (offlineMode) {
+      setClaimError("Le rattachement du dossier nécessite la base de données. Le tableau de bord autonome reste disponible hors ligne.");
+      return;
+    }
     try { await claim({ data: { tracking_code: claimCode, phone_last4: claimPhone } }); setClaimCode(""); setClaimPhone(""); await load(); }
     catch (e) { setClaimError((e as Error).message); }
   };
   const save = async () => {
-    try { await saveProfile({ data: { full_name: profileName, level: profileLevel } }); await load(); }
-    catch (e) { setClaimError((e as Error).message); }
+    try {
+      if (offlineMode) {
+        const local = getLocalDashboardData();
+        local.profile.full_name = profileName;
+        local.profile.level = profileLevel;
+        localStorage.setItem("nouroul_fouaad_local_dashboard", JSON.stringify(local));
+        setData(local);
+        return;
+      }
+      await saveProfile({ data: { full_name: profileName, level: profileLevel } });
+      await load();
+    } catch (e) { setClaimError((e as Error).message); }
   };
-  const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/etudiant/connexion" }); };
+  const signOut = async () => { if (!offlineMode) await supabase.auth.signOut(); navigate({ to: "/etudiant/connexion" }); };
 
   if (loading) return (
     <main className="max-w-7xl mx-auto px-6 py-12 md:py-16">
@@ -143,6 +173,11 @@ function StudentDashboardPage() {
       </div>
     </section>
 
+    {offlineMode && <section className="rounded-3xl border border-accent/30 bg-accent/5 p-5">
+      <p className="text-sm font-semibold text-primary">Mode autonome activé</p>
+      <p className="mt-1 text-sm text-muted-foreground">Le tableau de bord fonctionne sans Supabase. Les modifications du profil sont conservées uniquement dans ce navigateur. Le rattachement du dossier, les notes réelles et la synchronisation avec l'académie seront réactivés lorsque la base de données sera disponible.</p>
+    </section>}
+
     {!data.inscription && <section className="rounded-3xl border border-border bg-card p-7 md:p-9">
       <div className="flex items-center gap-3 mb-6"><ClipboardCheck className="w-6 h-6 text-accent" /><div><h2 className="text-2xl text-primary">Lier mon dossier</h2><p className="text-sm text-muted-foreground">Associez le compte à votre inscription existante.</p></div></div>
       <div className="grid md:grid-cols-[1fr_220px_auto] gap-3"><input value={claimCode} onChange={(e) => setClaimCode(e.target.value.toUpperCase())} placeholder="INS-XXXX-XXXX" className="rounded-2xl border border-input bg-background px-4 py-3.5" /><input value={claimPhone} onChange={(e) => setClaimPhone(e.target.value.replace(/\D/g,"").slice(-4))} placeholder="4 derniers chiffres WhatsApp" inputMode="numeric" className="rounded-2xl border border-input bg-background px-4 py-3.5" /><button onClick={doClaim} className="rounded-2xl px-6 py-3.5 font-semibold text-white" style={{ background: "var(--gradient-hero)" }}>Lier mon dossier</button></div>
@@ -171,7 +206,7 @@ function StudentDashboardPage() {
     </section>
 
     <section className="grid xl:grid-cols-2 gap-6">
-      <Panel title="Notifications" icon={<Bell className="w-5 h-5" />}>{data.notifications?.length ? data.notifications.map((n:any)=><div key={n.id} className="py-3 border-b border-border last:border-0"><div className="flex items-start justify-between gap-4"><div><p className="font-medium">{n.title}</p><p className="text-sm text-muted-foreground mt-1">{n.message}</p></div>{!n.read_at&&<button onClick={async()=>{await markRead({data:{id:n.id}});await load();}} className="text-xs text-accent font-semibold">Lu</button>}</div></div>) : <Empty text="Vous n'avez pas encore de notification." />}</Panel>
+      <Panel title="Notifications" icon={<Bell className="w-5 h-5" />}>{data.notifications?.length ? data.notifications.map((n:any)=><div key={n.id} className="py-3 border-b border-border last:border-0"><div className="flex items-start justify-between gap-4"><div><p className="font-medium">{n.title}</p><p className="text-sm text-muted-foreground mt-1">{n.message}</p></div>{!n.read_at&&<button onClick={async()=>{if(offlineMode){const local=getLocalDashboardData();local.notifications=(local.notifications??[]).map((item:any)=>item.id===n.id?{...item,read_at:new Date().toISOString()}:item);localStorage.setItem("nouroul_fouaad_local_dashboard",JSON.stringify(local));setData(local);}else{await markRead({data:{id:n.id}});await load();}}} className="text-xs text-accent font-semibold">Lu</button>}</div></div>) : <Empty text="Vous n'avez pas encore de notification." />}</Panel>
       <Panel title="Mon dossier & certificats" icon={<FileBadge2 className="w-5 h-5" />}>{data.inscription?<div className="space-y-3 text-sm"><div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono">{data.inscription.tracking_code}</span></div><div className="flex justify-between"><span className="text-muted-foreground">Programme</span><span>{data.inscription.programme}</span></div><div className="flex justify-between"><span className="text-muted-foreground">Statut</span><span className="text-accent font-semibold">{data.inscription.status}</span></div><div className="flex gap-3 pt-2"><Link to="/mon-espace" className="rounded-full border border-border px-4 py-2">Certificat / suivi</Link><Link to="/paiement" className="rounded-full border border-border px-4 py-2">Paiement</Link></div></div>:<Empty text="Liez votre dossier pour afficher vos informations d'inscription." />}</Panel>
     </section>
 
@@ -200,4 +235,50 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
       },
     );
   });
+}
+
+
+function getLocalDashboardData() {
+  const key = "nouroul_fouaad_local_dashboard";
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) return JSON.parse(saved);
+  } catch {
+    // Ignore malformed local storage and restore the safe local state.
+  }
+  return {
+    profile: {
+      user_id: "local-student",
+      full_name: "Étudiant Nouroul Foua'ad",
+      whatsapp: "",
+      level: "Mémorisation du Coran",
+      avatar_url: null,
+    },
+    inscription: null,
+    courses: [
+      { id: "local-coran", slug: "memorisation-coran", title: "Mémorisation du Coran", subject: "Coran", description: "Parcours de mémorisation, révision et accompagnement.", level: "Tous niveaux", schedule: "Selon le groupe", active: true },
+      { id: "local-tajwid", slug: "tajwid", title: "Tajwid", subject: "Sciences coraniques", description: "Apprentissage progressif des règles de récitation.", level: "Tous niveaux", schedule: "Selon le groupe", active: true },
+    ],
+    enrollments: [{
+      id: "local-enrollment-1",
+      status: "mode autonome",
+      enrolled_at: new Date().toISOString(),
+      course_id: "local-coran",
+      inscription_id: null,
+      student_courses: { id: "local-coran", title: "Mémorisation du Coran", subject: "Coran", description: "Parcours de mémorisation, révision et accompagnement." },
+    }],
+    progress: [{ id: "local-progress-1", course_id: "local-coran", progress: 0, teacher_note: "Les données réelles apparaîtront après reconnexion à la base." }],
+    quranProgress: [],
+    assessments: [],
+    attendance: [],
+    notifications: [{
+      id: "local-notice",
+      title: "Mode autonome",
+      message: "Le tableau de bord reste accessible pendant l'indisponibilité de la base de données.",
+      type: "system",
+      read_at: null,
+      created_at: new Date().toISOString(),
+    }],
+    resources: [],
+  };
 }
