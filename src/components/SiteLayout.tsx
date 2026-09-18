@@ -9,7 +9,7 @@ const nav = [
   { to: "/spirituel", label: "Coran & Hadiths" },
   { to: "/paiement", label: "Paiement" },
   { to: "/inscription", label: "Inscription" },
-  { to: "/mon-espace", label: "Espace étudiant" },
+  { to: "/etudiant/dashboard", label: "Espace étudiant" },
 ] as const;
 
 const footerFormationLinks = [
@@ -22,16 +22,10 @@ const footerFormationLinks = [
 export function SiteLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <div className="bg-primary text-primary-foreground text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-          <span>✓ Cours en ligne</span><span>✓ Suivi personnalisé</span><span>✓ Assistance WhatsApp</span>
-        </div>
-      </div>
-
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-5">
           <Link to="/" className="flex items-center gap-3 min-w-0">
-            <img src={siteLogo} alt="Logo NOUROUL FOUA'AD" className="w-11 h-11 rounded-2xl object-cover bg-white shadow-sm" />
+            <img src={siteLogo} alt="Logo NOUROUL FOUA'AD" className="w-11 h-11 rounded-2xl object-cover bg-primary-foreground shadow-sm" />
             <div className="leading-tight min-w-0"><div className="font-semibold tracking-wide truncate" style={{ fontFamily: "var(--font-display)" }}>NOUROUL FOUA'AD</div><div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Lumière du cœur</div></div>
           </Link>
           <nav className="hidden xl:flex items-center gap-6 text-sm">{nav.map((n) => <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-primary transition-colors" activeProps={{ className: "text-primary font-semibold" }}>{n.label}</Link>)}</nav>
@@ -52,11 +46,16 @@ export function SiteLayout() {
 
           <div><h4 className="text-sm uppercase tracking-[0.2em] mb-4 opacity-70">Formations</h4><ul className="space-y-2 text-sm">{footerFormationLinks.map(([to, label]) => <li key={label}><Link to={to} className="opacity-90 hover:opacity-100">{label}</Link></li>)}</ul></div>
 
-          <div><h4 className="text-sm uppercase tracking-[0.2em] mb-4 opacity-70">Étudiants</h4><ul className="space-y-2 text-sm"><li><Link to="/inscription" className="opacity-90 hover:opacity-100">S'inscrire</Link></li><li><Link to="/paiement" className="opacity-90 hover:opacity-100">Payer / envoyer un reçu</Link></li><li><Link to="/mon-espace" className="opacity-90 hover:opacity-100">Suivre mon inscription</Link></li><li><a href="https://wa.me/22788376133" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100">Assistance WhatsApp</a></li></ul></div>
+          <div><h4 className="text-sm uppercase tracking-[0.2em] mb-4 opacity-70">Étudiants</h4><ul className="space-y-2 text-sm"><li><Link to="/inscription" className="opacity-90 hover:opacity-100">S'inscrire</Link></li><li><Link to="/paiement" className="opacity-90 hover:opacity-100">Payer / envoyer un reçu</Link></li><li><Link to="/etudiant/dashboard" className="opacity-90 hover:opacity-100">Ouvrir mon espace étudiant</Link></li><li><Link to="/mon-espace" className="opacity-90 hover:opacity-100">Suivre mon inscription</Link></li></ul></div>
 
           <div><h4 className="text-sm uppercase tracking-[0.2em] mb-4 opacity-70">Contact</h4><p className="text-sm opacity-80 mb-1">WhatsApp / Appel</p><a href="tel:+22788376133" className="text-2xl font-semibold tracking-wide" style={{ fontFamily: "var(--font-display)" }}>+227 88 37 61 33</a><p className="text-xs mt-3 opacity-70 leading-relaxed">Réponse et accompagnement pour l'inscription, le paiement et le suivi.</p></div>
         </div>
-        <div className="border-t border-white/10 py-5 text-center text-xs opacity-70 px-4">© {new Date().getFullYear()} NOUROUL FOUA'AD — Tous droits réservés · Plateforme éducative en ligne</div>
+        <div className="border-t border-primary-foreground/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium">
+            <span>✓ Cours en ligne</span><span>✓ Suivi personnalisé</span><span>✓ Assistance WhatsApp</span>
+          </div>
+          <div className="border-t border-primary-foreground/10 py-5 text-center text-xs opacity-70 px-4">© {new Date().getFullYear()} NOUROUL FOUA'AD — Tous droits réservés · Plateforme éducative en ligne</div>
+        </div>
       </footer>
     </div>
   );
