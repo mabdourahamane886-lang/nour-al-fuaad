@@ -21,6 +21,8 @@ import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
 import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
+import { Route as EtudiantDashboardRouteImport } from './routes/etudiant/dashboard'
+import { Route as EtudiantConnexionRouteImport } from './routes/etudiant/connexion'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -91,6 +93,16 @@ const RecuReferenceRoute = RecuReferenceRouteImport.update({
   path: '/recu/$reference',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EtudiantDashboardRoute = EtudiantDashboardRouteImport.update({
+  id: '/etudiant/dashboard',
+  path: '/etudiant/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EtudiantConnexionRoute = EtudiantConnexionRouteImport.update({
+  id: '/etudiant/connexion',
+  path: '/etudiant/connexion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
   id: '/admin/paiements',
   path: '/admin/paiements',
@@ -156,6 +168,8 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
+  '/etudiant/connexion': typeof EtudiantConnexionRoute
+  '/etudiant/dashboard': typeof EtudiantDashboardRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -179,6 +193,8 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
+  '/etudiant/connexion': typeof EtudiantConnexionRoute
+  '/etudiant/dashboard': typeof EtudiantDashboardRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -203,6 +219,8 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/inscriptions': typeof AdminInscriptionsRoute
   '/admin/paiements': typeof AdminPaiementsRoute
+  '/etudiant/connexion': typeof EtudiantConnexionRoute
+  '/etudiant/dashboard': typeof EtudiantDashboardRoute
   '/recu/$reference': typeof RecuReferenceRoute
   '/statut/$transactionId': typeof StatutTransactionIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -228,6 +246,8 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin/inscriptions'
     | '/admin/paiements'
+    | '/etudiant/connexion'
+    | '/etudiant/dashboard'
     | '/recu/$reference'
     | '/statut/$transactionId'
     | '/.lovable/oauth/consent'
@@ -251,6 +271,8 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin/inscriptions'
     | '/admin/paiements'
+    | '/etudiant/connexion'
+    | '/etudiant/dashboard'
     | '/recu/$reference'
     | '/statut/$transactionId'
     | '/.lovable/oauth/consent'
@@ -274,6 +296,8 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin/inscriptions'
     | '/admin/paiements'
+    | '/etudiant/connexion'
+    | '/etudiant/dashboard'
     | '/recu/$reference'
     | '/statut/$transactionId'
     | '/.lovable/oauth/consent'
@@ -298,6 +322,8 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminInscriptionsRoute: typeof AdminInscriptionsRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
+  EtudiantConnexionRoute: typeof EtudiantConnexionRoute
+  EtudiantDashboardRoute: typeof EtudiantDashboardRoute
   RecuReferenceRoute: typeof RecuReferenceRoute
   StatutTransactionIdRoute: typeof StatutTransactionIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -393,6 +419,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecuReferenceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/etudiant/dashboard': {
+      id: '/etudiant/dashboard'
+      path: '/etudiant/dashboard'
+      fullPath: '/etudiant/dashboard'
+      preLoaderRoute: typeof EtudiantDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/etudiant/connexion': {
+      id: '/etudiant/connexion'
+      path: '/etudiant/connexion'
+      fullPath: '/etudiant/connexion'
+      preLoaderRoute: typeof EtudiantConnexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/paiements': {
       id: '/admin/paiements'
       path: '/admin/paiements'
@@ -475,6 +515,8 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AdminInscriptionsRoute: AdminInscriptionsRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
+  EtudiantConnexionRoute: EtudiantConnexionRoute,
+  EtudiantDashboardRoute: EtudiantDashboardRoute,
   RecuReferenceRoute: RecuReferenceRoute,
   StatutTransactionIdRoute: StatutTransactionIdRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
