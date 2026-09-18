@@ -25,6 +25,7 @@ export type Database = {
           status: string
           tracking_code: string
           updated_at: string
+          user_id: string | null
           validated_at: string | null
           whatsapp: string
         }
@@ -38,6 +39,7 @@ export type Database = {
           status?: string
           tracking_code: string
           updated_at?: string
+          user_id?: string | null
           validated_at?: string | null
           whatsapp: string
         }
@@ -51,6 +53,7 @@ export type Database = {
           status?: string
           tracking_code?: string
           updated_at?: string
+          user_id?: string | null
           validated_at?: string | null
           whatsapp?: string
         }
@@ -148,6 +151,327 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      quran_progress: {
+        Row: {
+          id: string
+          memorization_percent: number
+          revision_percent: number
+          surah_name: string | null
+          surah_number: number
+          teacher_note: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          memorization_percent?: number
+          revision_percent?: number
+          surah_name?: string | null
+          surah_number: number
+          teacher_note?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          memorization_percent?: number
+          revision_percent?: number
+          surah_name?: string | null
+          surah_number?: number
+          teacher_note?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_assessments: {
+        Row: {
+          assessed_at: string
+          id: string
+          max_score: number | null
+          score: number | null
+          subject: string | null
+          teacher_note: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          assessed_at?: string
+          id?: string
+          max_score?: number | null
+          score?: number | null
+          subject?: string | null
+          teacher_note?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          assessed_at?: string
+          id?: string
+          max_score?: number | null
+          score?: number | null
+          subject?: string | null
+          teacher_note?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_attendance: {
+        Row: {
+          course_id: string | null
+          id: string
+          notes: string | null
+          session_date: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          course_id?: string | null
+          id?: string
+          notes?: string | null
+          session_date: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string | null
+          id?: string
+          notes?: string | null
+          session_date?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_attendance_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "student_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_courses: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          id: string
+          level: string | null
+          schedule: string | null
+          slug: string
+          subject: string | null
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          level?: string | null
+          schedule?: string | null
+          slug: string
+          subject?: string | null
+          title: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          level?: string | null
+          schedule?: string | null
+          slug?: string
+          subject?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      student_enrollments: {
+        Row: {
+          course_id: string
+          enrolled_at: string
+          id: string
+          inscription_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          enrolled_at?: string
+          id?: string
+          inscription_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          enrolled_at?: string
+          id?: string
+          inscription_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "student_courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_enrollments_inscription_id_fkey"
+            columns: ["inscription_id"]
+            isOneToOne: false
+            referencedRelation: "inscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          read_at?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          level: string | null
+          updated_at: string
+          user_id: string
+          whatsapp: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          level?: string | null
+          updated_at?: string
+          user_id: string
+          whatsapp?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          level?: string | null
+          updated_at?: string
+          user_id?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      student_progress: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          last_activity_at: string | null
+          progress: number
+          teacher_note: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          progress?: number
+          teacher_note?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          progress?: number
+          teacher_note?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "student_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_resources: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          resource_type: string
+          title: string
+          url: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          resource_type?: string
+          title: string
+          url: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          resource_type?: string
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_resources_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "student_courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
