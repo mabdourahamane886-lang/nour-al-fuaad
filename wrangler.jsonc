@@ -1,10 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
-  "compatibility_date": "2025-09-24",
+  "name": "nour-al-fuaad",
+  "compatibility_date": "2026-09-18",
   "compatibility_flags": ["nodejs_compat"],
   "main": "src/server.ts",
+  "workers_dev": true,
   "secrets": {
-    "required": ["SUPABASE_SECRET_KEY"]
+    "required": [
+      "SUPABASE_URL",
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_SECRET_KEY"
+    ]
   }
 }
