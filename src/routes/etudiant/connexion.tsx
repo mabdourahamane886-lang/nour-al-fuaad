@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { createStudentAccount } from "@/lib/student.functions";
 
 export const Route = createFileRoute("/etudiant/connexion")({
   head: () => ({
@@ -75,27 +76,17 @@ function StudentLoginPage() {
         setNeedsConfirmation(false);
         navigate({ to: "/etudiant/dashboard" });
       } else {
-        const redirectTo = window.location.origin + "/etudiant/dashboard";
-        const { data, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: fullName },
-            emailRedirectTo: redirectTo,
-          },
+        await createStudentAccount({
+          data: { email, password, full_name: fullName },
         });
 
-        if (signUpError) throw signUpError;
+        // Le compte est déjà confirmé côté serveur. On se connecte immédiatement.
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
 
-        if (data.session) {
-          navigate({ to: "/etudiant/dashboard" });
-          return;
-        }
-
-        setNeedsConfirmation(true);
-        setMessage("Compte créé. Vérifiez votre boîte email et cliquez sur le lien de confirmation pour activer votre compte. Après confirmation, revenez ici et connectez-vous.");
-        setPassword("");
-        setMode("signin");
+        setNeedsConfirmation(false);
+        setMessage("Compte créé et vérifié automatiquement. Bienvenue dans votre espace étudiant.");
+        navigate({ to: "/etudiant/dashboard" });
       }
     } catch (err) {
       setError((err as Error).message);
