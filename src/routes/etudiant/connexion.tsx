@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { createStudentAccount } from "@/lib/student.functions";
+import { createStudentAccount, ensureStudentEmailConfirmed } from "@/lib/student.functions";
 
 export const Route = createFileRoute("/etudiant/connexion")({
   head: () => ({
@@ -33,6 +33,7 @@ function StudentLoginPage() {
 
     try {
       if (mode === "signin") {
+        await ensureStudentEmailConfirmed({ data: { email } });
         const { error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
