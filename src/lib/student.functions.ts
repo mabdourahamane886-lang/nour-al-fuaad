@@ -57,6 +57,31 @@ export const createStudentAccount = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+
+
+export const ensureStudentEmailConfirmed = createServerFn({ method: "POST" })
+  .inputValidator((input) => z.object({
+    email: z.string().trim().email(),
+  }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: usersData, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000,
+    });
+    if (listError) throw new Error("Impossible de vérifier le compte étudiant.");
+    const user = usersData.users.find((item) => item.email?.toLowerCase() === data.email.toLowerCase());
+    if (!user) return { exists: false, confirmed: false };
+    if (!user.email_confirmed_at) {
+      const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
+        email_confirm: true,
+      });
+      if (updateError) throw new Error("Impossible de confirmer automatiquement le compte.");
+      return { exists: true, confirmed: true };
+    }
+    return { exists: true, confirmed: true };
+  });
+
 export const getStudentDashboard = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ access_token: z.string().min(20) }).parse(input))
   .handler(async ({ data }) => {
