@@ -104,13 +104,13 @@ export const getStudentDashboard = createServerFn({ method: "POST" })
       .limit(1);
 
     const [coursesRes, enrollmentsRes, progressRes, quranRes, assessmentsRes, attendanceRes, notificationsRes] = await Promise.all([
-      db.from("student_courses").select("id, slug, title, subject, description, level, schedule, active").eq("active", true).order("title"),
-      db.from("student_enrollments").select("id, status, enrolled_at, course_id, inscription_id, student_courses(id, slug, title, subject, description, level, schedule)").eq("user_id", userId).order("enrolled_at", { ascending: false }),
-      db.from("student_progress").select("id, progress, last_activity_at, teacher_note, course_id, student_courses(title, subject)").eq("user_id", userId).order("updated_at", { ascending: false }),
-      db.from("quran_progress").select("id, surah_number, surah_name, memorization_percent, revision_percent, teacher_note, updated_at").eq("user_id", userId).order("surah_number"),
-      db.from("student_assessments").select("id, subject, title, score, max_score, assessed_at, teacher_note").eq("user_id", userId).order("assessed_at", { ascending: false }).limit(10),
-      db.from("student_attendance").select("id, session_date, status, notes, course_id, student_courses(title)").eq("user_id", userId).order("session_date", { ascending: false }).limit(30),
-      db.from("student_notifications").select("id, title, message, type, read_at, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(12),
+      supabaseAdmin.from("student_courses").select("id, slug, title, subject, description, level, schedule, active").eq("active", true).order("title"),
+      supabaseAdmin.from("student_enrollments").select("id, status, enrolled_at, course_id, inscription_id, student_courses(id, slug, title, subject, description, level, schedule)").eq("user_id", userId).order("enrolled_at", { ascending: false }),
+      supabaseAdmin.from("student_progress").select("id, progress, last_activity_at, teacher_note, course_id, student_courses(title, subject)").eq("user_id", userId).order("updated_at", { ascending: false }),
+      supabaseAdmin.from("quran_progress").select("id, surah_number, surah_name, memorization_percent, revision_percent, teacher_note, updated_at").eq("user_id", userId).order("surah_number"),
+      supabaseAdmin.from("student_assessments").select("id, subject, title, score, max_score, assessed_at, teacher_note").eq("user_id", userId).order("assessed_at", { ascending: false }).limit(10),
+      supabaseAdmin.from("student_attendance").select("id, session_date, status, notes, course_id, student_courses(title)").eq("user_id", userId).order("session_date", { ascending: false }).limit(30),
+      supabaseAdmin.from("student_notifications").select("id, title, message, type, read_at, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(12),
     ]);
 
     const courseIds = (enrollmentsRes.data ?? []).map((e: any) => e.course_id).filter(Boolean);
