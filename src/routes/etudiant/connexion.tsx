@@ -23,36 +23,7 @@ function StudentLoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [needsConfirmation, setNeedsConfirmation] = useState(false);
-  const [resending, setResending] = useState(false);
-
-  const resendConfirmation = async () => {
-    if (!email) {
-      setError("Saisissez votre adresse email.");
-      return;
-    }
-
-    setResending(true);
-    setError(null);
-    setMessage(null);
-
-    try {
-      const { error: resendError } = await supabase.auth.resend({
-        type: "signup",
-        email,
-        options: {
-          emailRedirectTo: window.location.origin + "/etudiant/dashboard",
-        },
-      });
-
-      if (resendError) throw resendError;
-      setMessage("Un nouvel email de confirmation vient d'être envoyé. Vérifiez également vos spams.");
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setResending(false);
-    }
-  };
+  const [needsConfirmation] = useState(false);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -67,13 +38,11 @@ function StudentLoginPage() {
         if (error) {
           const normalized = error.message.toLowerCase();
           if (normalized.includes("email not confirmed") || normalized.includes("email not verified")) {
-            setNeedsConfirmation(true);
-            throw new Error("Votre adresse email n'est pas encore confirmée. Ouvrez l'email envoyé par Nour-al-fuaad, puis revenez vous connecter.");
+            throw new Error("Votre compte est en cours d'activation. Réessayez de vous connecter dans quelques secondes.");
           }
           throw error;
         }
 
-        setNeedsConfirmation(false);
         navigate({ to: "/etudiant/dashboard" });
       } else {
         await createStudentAccount({
@@ -84,7 +53,6 @@ function StudentLoginPage() {
         const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
 
-        setNeedsConfirmation(false);
         setMessage("Compte créé et vérifié automatiquement. Bienvenue dans votre espace étudiant.");
         navigate({ to: "/etudiant/dashboard" });
       }
@@ -194,16 +162,7 @@ function StudentLoginPage() {
           </div>
         )}
 
-        {needsConfirmation && (
-          <button
-            type="button"
-            onClick={() => void resendConfirmation()}
-            disabled={resending}
-            className="mt-3 w-full rounded-2xl border border-accent px-4 py-3 text-sm font-semibold text-accent disabled:opacity-60"
-          >
-            {resending ? "Envoi en cours…" : "Renvoyer l'email de confirmation"}
-          </button>
-        )}
+        {needsConfirmation && null}
 
         <div className="mt-6 rounded-2xl bg-muted/40 p-4 text-sm text-muted-foreground">
           L’inscription crée directement votre compte. Une fois connecté, utilisez votre code de suivi et les 4 derniers chiffres de votre WhatsApp pour lier votre dossier étudiant.
