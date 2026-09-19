@@ -63,25 +63,26 @@ export const getStudentDashboard = createServerFn({ method: "POST" })
     const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
     const key = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
     if (!url || !key) throw new Error("Configuration Supabase serveur manquante.");
-    const db = createClient<Database>(url, key, {
+    const authClient = createClient<Database>(url, key, {
       global: { headers: { Authorization: `Bearer ${data.access_token}` } },
       auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     });
-    const { data: claimsData, error: claimsError } = await db.auth.getClaims(data.access_token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(data.access_token);
     if (claimsError || !claimsData?.claims?.sub) throw new Error("Unauthorized: Invalid token");
     const userId = claimsData.claims.sub;
     const email = claimsData.claims.email as string | undefined;
     // Le jeton de la session navigateur est transmis explicitement au serveur.
     // Cela évite de dépendre d'un Authorization header que useServerFn ne relaie pas automatiquement.
 
-    const { data: existingProfile } = await db.from("student_profiles")
+    const { data: existingProfile } = await supabaseAdmin.from("student_profiles")
       .select("user_id, full_name, whatsapp, level, avatar_url, created_at, updated_at")
       .eq("user_id", userId)
       .maybeSingle();
 
     let profile = existingProfile;
     if (!profile) {
-      const { data: createdProfile, error: profileError } = await db.from("student_profiles")
+      const { data: createdProfile, error: profileError } = await supabaseAdmin.from("student_profiles")
         .upsert({
           user_id: userId,
           full_name: email?.split("@")[0] ?? null,
@@ -96,7 +97,7 @@ export const getStudentDashboard = createServerFn({ method: "POST" })
       }
     }
 
-    const inscriptionRes = await db.from("inscriptions")
+    const inscriptionRes = await supabaseAdmin.from("inscriptions")
       .select("id, tracking_code, customer_name, whatsapp, programme, status, note, created_at, validated_at, access_granted_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
@@ -114,12 +115,12 @@ export const getStudentDashboard = createServerFn({ method: "POST" })
 
     const courseIds = (enrollmentsRes.data ?? []).map((e: any) => e.course_id).filter(Boolean);
     let resources: any[] = [];
-    const publicResources = await db.from("student_resources")
+    const publicResources = await supabaseAdmin.from("student_resources")
       .select("id, title, description, resource_type, url, course_id, created_at")
       .eq("is_public", true).order("created_at", { ascending: false }).limit(20);
     resources = publicResources.data ?? [];
     if (courseIds.length) {
-      const privateResources = await db.from("student_resources")
+      const privateResources = await supabaseAdmin.from("student_resources")
         .select("id, title, description, resource_type, url, course_id, created_at")
         .in("course_id", courseIds).order("created_at", { ascending: false }).limit(20);
       resources = Array.from(new Map([...resources, ...(privateResources.data ?? [])].map((r: any) => [r.id, r])).values());
