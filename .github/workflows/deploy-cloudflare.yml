@@ -1,4 +1,5 @@
 name: Deploy Nouroul Foua'ad to Cloudflare Workers
+# Production deployment workflow
 
 on:
   push:
