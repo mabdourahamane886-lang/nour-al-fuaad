@@ -18,13 +18,13 @@ export const Route = createFileRoute("/paiement")({
 const plans = [
   {
     name: "Inscription Sciences",
-    amount: 3000,
+    amount: 1000,
     programme: "Inscription Sciences",
     features: ["Frais d'inscription unique", "Coran, Hadith, Fiqh", "Support WhatsApp"],
   },
   {
     name: "Mensualité — Débutant",
-    amount: 3000,
+    amount: 2000,
     programme: "Mensualité Débutant",
     features: ["Par mois", "3 séances / semaine", "Alphabetisation, bases"],
   },
