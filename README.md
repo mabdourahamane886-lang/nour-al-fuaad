@@ -2,17 +2,17 @@
 
 Créé moi un site Web de blog islamique de cours en ligne, apprendre la langue arabe, le tafsir. 
 
-Le prix de l'inscription 3000f 
+Le prix de l'inscription 1000f 
 
-Le mois 5000f 
+Le mois 2000f 
 
 Accompagnement avec succes 
 
-Le prix de l'apprentissage de la langue arabe 4000f
+Le prix de l'apprentissage de la langue arabe 2000f
 
-Les début 3000f 
+Les début 2000f 
 
-L'inscription 1500f. 
+L'inscription 1000f. 
 
 Ajoute des versets et hadiths. 
 
