@@ -3,11 +3,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { createStripeCheckout } from "@/lib/stripe.functions";
 
 const presets = [
-  { label: "Inscription Sciences", value: 3000 },
-  { label: "Inscription Arabe", value: 1500 },
-  { label: "Mensualité Débutant", value: 3000 },
-  { label: "Mensualité Intermédiaire", value: 4000 },
-  { label: "Mensualité Avancé", value: 5000 },
+  { label: "Inscription Sciences", value: 1000 },
+  { label: "Inscription Arabe", value: 1000 },
+  { label: "Mensualité Débutant", value: 2000 },
+  { label: "Mensualité Intermédiaire", value: 2000 },
+  { label: "Mensualité Avancé", value: 2000 },
   { label: "Arabe — complet", value: 4000 },
 ];
 
