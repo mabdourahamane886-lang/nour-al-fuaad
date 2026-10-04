@@ -54,3 +54,6 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+
+<!-- Cloudflare production deployment sync -->
