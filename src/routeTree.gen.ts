@@ -9,68 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SpirituelRouteImport } from './routes/spirituel'
-import { Route as PaiementRouteImport } from './routes/paiement'
-import { Route as MonEspaceRouteImport } from './routes/mon-espace'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LicenceRouteImport } from './routes/licence'
-import { Route as InscriptionRouteImport } from './routes/inscription'
-import { Route as CoursRouteImport } from './routes/cours'
-import { Route as ArabeRouteImport } from './routes/arabe'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
-import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
-import { Route as EtudiantDashboardRouteImport } from './routes/etudiant/dashboard'
-import { Route as EtudiantConnexionRouteImport } from './routes/etudiant/connexion'
-import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
-import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as ArabeRouteImport } from './routes/arabe'
+import { Route as CoursRouteImport } from './routes/cours'
+import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as LicenceRouteImport } from './routes/licence'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as MonEspaceRouteImport } from './routes/mon-espace'
+import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as SpirituelRouteImport } from './routes/spirituel'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as ApiPublicStripeReturnRouteImport } from './routes/api/public/stripe-return'
-import { Route as ApiPublicMoneyfusionWebhookRouteImport } from './routes/api/public/moneyfusion-webhook'
-import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AdminInscriptionsRouteImport } from './routes/admin.inscriptions'
+import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
+import { Route as EtudiantConnexionRouteImport } from './routes/etudiant/connexion'
+import { Route as EtudiantDashboardRouteImport } from './routes/etudiant/dashboard'
+import { Route as RecuReferenceRouteImport } from './routes/recu.$reference'
+import { Route as StatutTransactionIdRouteImport } from './routes/statut.$transactionId'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as ApiPublicIpayWebhookRouteImport } from './routes/api/public/ipay-webhook'
+import { Route as ApiPublicMoneyfusionWebhookRouteImport } from './routes/api/public/moneyfusion-webhook'
+import { Route as ApiPublicStripeReturnRouteImport } from './routes/api/public/stripe-return'
 
-const SpirituelRoute = SpirituelRouteImport.update({
-  id: '/spirituel',
-  path: '/spirituel',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PaiementRoute = PaiementRouteImport.update({
-  id: '/paiement',
-  path: '/paiement',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MonEspaceRoute = MonEspaceRouteImport.update({
-  id: '/mon-espace',
-  path: '/mon-espace',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LicenceRoute = LicenceRouteImport.update({
-  id: '/licence',
-  path: '/licence',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InscriptionRoute = InscriptionRouteImport.update({
-  id: '/inscription',
-  path: '/inscription',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursRoute = CoursRouteImport.update({
-  id: '/cours',
-  path: '/cours',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArabeRoute = ArabeRouteImport.update({
@@ -78,29 +43,61 @@ const ArabeRoute = ArabeRouteImport.update({
   path: '/arabe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CoursRoute = CoursRouteImport.update({
+  id: '/cours',
+  path: '/cours',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StatutTransactionIdRoute = StatutTransactionIdRouteImport.update({
-  id: '/statut/$transactionId',
-  path: '/statut/$transactionId',
+const InscriptionRoute = InscriptionRouteImport.update({
+  id: '/inscription',
+  path: '/inscription',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecuReferenceRoute = RecuReferenceRouteImport.update({
-  id: '/recu/$reference',
-  path: '/recu/$reference',
+const LicenceRoute = LicenceRouteImport.update({
+  id: '/licence',
+  path: '/licence',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EtudiantDashboardRoute = EtudiantDashboardRouteImport.update({
-  id: '/etudiant/dashboard',
-  path: '/etudiant/dashboard',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EtudiantConnexionRoute = EtudiantConnexionRouteImport.update({
-  id: '/etudiant/connexion',
-  path: '/etudiant/connexion',
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MonEspaceRoute = MonEspaceRouteImport.update({
+  id: '/mon-espace',
+  path: '/mon-espace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaiementRoute = PaiementRouteImport.update({
+  id: '/paiement',
+  path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpirituelRoute = SpirituelRouteImport.update({
+  id: '/spirituel',
+  path: '/spirituel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminInscriptionsRoute = AdminInscriptionsRouteImport.update({
+  id: '/admin/inscriptions',
+  path: '/admin/inscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
@@ -108,37 +105,29 @@ const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
   path: '/admin/paiements',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminInscriptionsRoute = AdminInscriptionsRouteImport.update({
-  id: '/admin/inscriptions',
-  path: '/admin/inscriptions',
+const EtudiantConnexionRoute = EtudiantConnexionRouteImport.update({
+  id: '/etudiant/connexion',
+  path: '/etudiant/connexion',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicStripeReturnRoute = ApiPublicStripeReturnRouteImport.update({
-  id: '/api/public/stripe-return',
-  path: '/api/public/stripe-return',
+const EtudiantDashboardRoute = EtudiantDashboardRouteImport.update({
+  id: '/etudiant/dashboard',
+  path: '/etudiant/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicMoneyfusionWebhookRoute =
-  ApiPublicMoneyfusionWebhookRouteImport.update({
-    id: '/api/public/moneyfusion-webhook',
-    path: '/api/public/moneyfusion-webhook',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
-  id: '/api/public/ipay-webhook',
-  path: '/api/public/ipay-webhook',
+const RecuReferenceRoute = RecuReferenceRouteImport.update({
+  id: '/recu/$reference',
+  path: '/recu/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatutTransactionIdRoute = StatutTransactionIdRouteImport.update({
+  id: '/statut/$transactionId',
+  path: '/statut/$transactionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
@@ -147,9 +136,20 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
+const ApiPublicIpayWebhookRoute = ApiPublicIpayWebhookRouteImport.update({
+  id: '/api/public/ipay-webhook',
+  path: '/api/public/ipay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicMoneyfusionWebhookRoute =
+  ApiPublicMoneyfusionWebhookRouteImport.update({
+    id: '/api/public/moneyfusion-webhook',
+    path: '/api/public/moneyfusion-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicStripeReturnRoute = ApiPublicStripeReturnRouteImport.update({
+  id: '/api/public/stripe-return',
+  path: '/api/public/stripe-return',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -335,60 +335,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/spirituel': {
-      id: '/spirituel'
-      path: '/spirituel'
-      fullPath: '/spirituel'
-      preLoaderRoute: typeof SpirituelRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/paiement': {
-      id: '/paiement'
-      path: '/paiement'
-      fullPath: '/paiement'
-      preLoaderRoute: typeof PaiementRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mon-espace': {
-      id: '/mon-espace'
-      path: '/mon-espace'
-      fullPath: '/mon-espace'
-      preLoaderRoute: typeof MonEspaceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/licence': {
-      id: '/licence'
-      path: '/licence'
-      fullPath: '/licence'
-      preLoaderRoute: typeof LicenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inscription': {
-      id: '/inscription'
-      path: '/inscription'
-      fullPath: '/inscription'
-      preLoaderRoute: typeof InscriptionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cours': {
-      id: '/cours'
-      path: '/cours'
-      fullPath: '/cours'
-      preLoaderRoute: typeof CoursRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/arabe': {
@@ -398,60 +349,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArabeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/cours': {
+      id: '/cours'
+      path: '/cours'
+      fullPath: '/cours'
+      preLoaderRoute: typeof CoursRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/statut/$transactionId': {
-      id: '/statut/$transactionId'
-      path: '/statut/$transactionId'
-      fullPath: '/statut/$transactionId'
-      preLoaderRoute: typeof StatutTransactionIdRouteImport
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recu/$reference': {
-      id: '/recu/$reference'
-      path: '/recu/$reference'
-      fullPath: '/recu/$reference'
-      preLoaderRoute: typeof RecuReferenceRouteImport
+    '/licence': {
+      id: '/licence'
+      path: '/licence'
+      fullPath: '/licence'
+      preLoaderRoute: typeof LicenceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/etudiant/dashboard': {
-      id: '/etudiant/dashboard'
-      path: '/etudiant/dashboard'
-      fullPath: '/etudiant/dashboard'
-      preLoaderRoute: typeof EtudiantDashboardRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/etudiant/connexion': {
-      id: '/etudiant/connexion'
-      path: '/etudiant/connexion'
-      fullPath: '/etudiant/connexion'
-      preLoaderRoute: typeof EtudiantConnexionRouteImport
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/paiements': {
-      id: '/admin/paiements'
-      path: '/admin/paiements'
-      fullPath: '/admin/paiements'
-      preLoaderRoute: typeof AdminPaiementsRouteImport
+    '/mon-espace': {
+      id: '/mon-espace'
+      path: '/mon-espace'
+      fullPath: '/mon-espace'
+      preLoaderRoute: typeof MonEspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/inscriptions': {
-      id: '/admin/inscriptions'
-      path: '/admin/inscriptions'
-      fullPath: '/admin/inscriptions'
-      preLoaderRoute: typeof AdminInscriptionsRouteImport
+    '/paiement': {
+      id: '/paiement'
+      path: '/paiement'
+      fullPath: '/paiement'
+      preLoaderRoute: typeof PaiementRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/spirituel': {
+      id: '/spirituel'
+      path: '/spirituel'
+      fullPath: '/spirituel'
+      preLoaderRoute: typeof SpirituelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -461,25 +412,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/stripe-return': {
-      id: '/api/public/stripe-return'
-      path: '/api/public/stripe-return'
-      fullPath: '/api/public/stripe-return'
-      preLoaderRoute: typeof ApiPublicStripeReturnRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/moneyfusion-webhook': {
-      id: '/api/public/moneyfusion-webhook'
-      path: '/api/public/moneyfusion-webhook'
-      fullPath: '/api/public/moneyfusion-webhook'
-      preLoaderRoute: typeof ApiPublicMoneyfusionWebhookRouteImport
+    '/admin/inscriptions': {
+      id: '/admin/inscriptions'
+      path: '/admin/inscriptions'
+      fullPath: '/admin/inscriptions'
+      preLoaderRoute: typeof AdminInscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/ipay-webhook': {
-      id: '/api/public/ipay-webhook'
-      path: '/api/public/ipay-webhook'
-      fullPath: '/api/public/ipay-webhook'
-      preLoaderRoute: typeof ApiPublicIpayWebhookRouteImport
+    '/admin/paiements': {
+      id: '/admin/paiements'
+      path: '/admin/paiements'
+      fullPath: '/admin/paiements'
+      preLoaderRoute: typeof AdminPaiementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/etudiant/connexion': {
+      id: '/etudiant/connexion'
+      path: '/etudiant/connexion'
+      fullPath: '/etudiant/connexion'
+      preLoaderRoute: typeof EtudiantConnexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/etudiant/dashboard': {
+      id: '/etudiant/dashboard'
+      path: '/etudiant/dashboard'
+      fullPath: '/etudiant/dashboard'
+      preLoaderRoute: typeof EtudiantDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recu/$reference': {
+      id: '/recu/$reference'
+      path: '/recu/$reference'
+      fullPath: '/recu/$reference'
+      preLoaderRoute: typeof RecuReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statut/$transactionId': {
+      id: '/statut/$transactionId'
+      path: '/statut/$transactionId'
+      fullPath: '/statut/$transactionId'
+      preLoaderRoute: typeof StatutTransactionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/invoke-tool/$tool': {
@@ -489,11 +475,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+    '/api/public/ipay-webhook': {
+      id: '/api/public/ipay-webhook'
+      path: '/api/public/ipay-webhook'
+      fullPath: '/api/public/ipay-webhook'
+      preLoaderRoute: typeof ApiPublicIpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/moneyfusion-webhook': {
+      id: '/api/public/moneyfusion-webhook'
+      path: '/api/public/moneyfusion-webhook'
+      fullPath: '/api/public/moneyfusion-webhook'
+      preLoaderRoute: typeof ApiPublicMoneyfusionWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/stripe-return': {
+      id: '/api/public/stripe-return'
+      path: '/api/public/stripe-return'
+      fullPath: '/api/public/stripe-return'
+      preLoaderRoute: typeof ApiPublicStripeReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
