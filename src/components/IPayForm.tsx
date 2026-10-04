@@ -8,14 +8,14 @@ const presets = [
   { label: "Inscription Sciences", value: 1000 },
   { label: "Inscription Arabe", value: 1000 },
   { label: "Début Arabe", value: 2000 },
-  { label: "Arabe — complet", value: 4000 },
+  { label: "Arabe — complet", value: 2000 },
 ];
 
 // Mensualités par niveau (montant par mois).
 const niveaux = [
-  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 3000 },
-  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 4000 },
-  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 5000 },
+  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 2000 },
+  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 2000 },
+  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 2000 },
 ];
 
 // Normalise un numéro Niger : retire +, espaces, indicatif 227 / 00227.
