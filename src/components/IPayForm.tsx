@@ -5,9 +5,9 @@ import { createIPayMobilePayment } from "@/lib/ipay.functions";
 import { supabase } from "@/integrations/supabase/client";
 
 const presets = [
-  { label: "Inscription Sciences", value: 3000 },
-  { label: "Inscription Arabe", value: 1500 },
-  { label: "Début Arabe", value: 3000 },
+  { label: "Inscription Sciences", value: 1000 },
+  { label: "Inscription Arabe", value: 1000 },
+  { label: "Début Arabe", value: 2000 },
   { label: "Arabe — complet", value: 4000 },
 ];
 
