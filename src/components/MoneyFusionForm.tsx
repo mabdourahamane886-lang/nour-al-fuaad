@@ -3,16 +3,16 @@ import { useServerFn } from "@tanstack/react-start";
 import { createMoneyFusionPayment } from "@/lib/moneyfusion.functions";
 
 const presets = [
-  { label: "Inscription Sciences", value: 3000 },
-  { label: "Inscription Arabe", value: 1500 },
-  { label: "Début Arabe", value: 3000 },
-  { label: "Arabe — complet", value: 4000 },
+  { label: "Inscription Sciences", value: 1000 },
+  { label: "Inscription Arabe", value: 1000 },
+  { label: "Début Arabe", value: 2000 },
+  { label: "Arabe — complet", value: 2000 },
 ];
 
 const niveaux = [
-  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 3000 },
-  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 4000 },
-  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 5000 },
+  { niveau: "Débutant", description: "Alphabetisation, bases de la lecture", value: 2000 },
+  { niveau: "Intermédiaire", description: "Lecture courante, mémorisation, fiqh", value: 2000 },
+  { niveau: "Avancé", description: "Tafsir, hadiths approfondis, perfectionnement", value: 2000 },
 ];
 
 function normalizeNigerMsisdn(raw: string): string {
@@ -31,7 +31,7 @@ export function MoneyFusionForm({
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
   const [msisdnError, setMsisdnError] = useState<string | null>(null);
-  const [amount, setAmount] = useState(presetAmount ?? 3000);
+  const [amount, setAmount] = useState(presetAmount ?? 1000);
   const [programme, setProgramme] = useState(presetProgramme ?? presets[0].label);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
