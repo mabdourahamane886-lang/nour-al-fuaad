@@ -1,8 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
-import { createRouter, useRouter, Link } from "@tanstack/react-router";
+import { createRouter, useRouter, Link, type ErrorComponentProps } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   return (
