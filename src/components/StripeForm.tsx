@@ -8,7 +8,7 @@ const presets = [
   { label: "Mensualité Débutant", value: 2000 },
   { label: "Mensualité Intermédiaire", value: 2000 },
   { label: "Mensualité Avancé", value: 2000 },
-  { label: "Arabe — complet", value: 4000 },
+  { label: "Arabe — complet", value: 2000 },
 ];
 
 export function StripeForm({
