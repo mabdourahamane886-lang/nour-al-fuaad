@@ -37,7 +37,7 @@ export function IPayForm({
   const [name, setName] = useState("");
   const [msisdn, setMsisdn] = useState("");
   const [msisdnError, setMsisdnError] = useState<string | null>(null);
-  const [amount, setAmount] = useState(presetAmount ?? 3000);
+  const [amount, setAmount] = useState(presetAmount ?? 1000);
   const [programme, setProgramme] = useState(presetProgramme ?? presets[0].label);
   const [loading, setLoading] = useState(false);
 

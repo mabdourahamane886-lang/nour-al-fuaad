@@ -19,7 +19,7 @@ export function StripeForm({
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [amount, setAmount] = useState(presetAmount ?? 3000);
+  const [amount, setAmount] = useState(presetAmount ?? 1000);
   const [programme, setProgramme] = useState(presetProgramme ?? presets[0].label);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

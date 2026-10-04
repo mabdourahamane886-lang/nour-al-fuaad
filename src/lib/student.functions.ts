@@ -7,7 +7,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 const claimSchema = z.object({
   tracking_code: z.string().trim().min(4).max(32).toUpperCase(),
-  phone_last4: z.string().trim().replace(/\D/g, "").slice(-4).refine((value) => /^\d{4}$/.test(value), "Les 4 derniers chiffres sont requis."),
+  phone_last4: z.string().trim().transform((value) => value.replace(/\D/g, "").slice(-4)).refine((value) => /^\d{4}$/.test(value), "Les 4 derniers chiffres sont requis."),
 });
 
 const programmeToSlugs: Record<string, string[]> = {
